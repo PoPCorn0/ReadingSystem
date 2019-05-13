@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ @copyright ：神农大学生软件创新中心 版权所有 © 2019
+  ~
+  ~ @author 16级信息与计算科学潘鹏程
+  ~
+  ~ @version
+  ~
+  ~ @date 2019.05.12
+  ~
+  ~ @Description
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snsoft.readingsystem.dao.MessageDao">
+
+    <insert id="sendMessages" parameterType="list">
+        insert into message (id, target_id, content) VALUES
+        <foreach collection="list" index="index" separator="," item="item">
+            (#{item.id}, #{item.targetId}, #{item.content})
+        </foreach>
+    </insert>
+
+</mapper>

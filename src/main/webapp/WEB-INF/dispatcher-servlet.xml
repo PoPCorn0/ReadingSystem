@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.snsoft.readingsystem.controller.checkController,
+        com.snsoft.readingsystem.controller.commonController,
+        com.snsoft.readingsystem.controller.studentController,
+        com.snsoft.readingsystem.controller.teacherController"/>
+
+    <context:annotation-config/>
+
+    <mvc:annotation-driven/>
+
+    <mvc:default-servlet-handler/>
+
+    <!--<bean id="stringConverter"-->
+    <!--class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
+    <!--<property name="supportedMediaTypes">-->
+    <!--<reciever>-->
+    <!--<value>text/html;charset=UTF-8</value>-->
+    <!--</reciever>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**.do"/>
+            <mvc:mapping path="/common/**.do"/>
+            <mvc:mapping path="/teacher/**.do"/>
+            <mvc:mapping path="/student/**.do"/>
+            <mvc:mapping path="/check/**.do"/>
+            <mvc:exclude-mapping path="/common/login.do"/>
+            <mvc:exclude-mapping path="/test.do"/>
+            <bean class="com.snsoft.readingsystem.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/teacher/**.do"/>
+            <bean class="com.snsoft.readingsystem.interceptor.TeacherInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/student/**.do"/>
+            <bean class="com.snsoft.readingsystem.interceptor.StudentInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/check/**.do"/>
+            <bean class="com.snsoft.readingsystem.interceptor.CheckInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSizePerFile" value="31457280"/>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxInMemorySize" value="1048576"/>
+    </bean>
+
+    <bean name="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/html/"/>
+        <property name="suffix" value=".html"/>
+    </bean>
+
+</beans>
