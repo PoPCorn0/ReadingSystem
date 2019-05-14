@@ -13,10 +13,7 @@
 package com.snsoft.readingsystem.dao;
 
 import com.snsoft.readingsystem.pojo.ReceivedTask;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,10 +45,18 @@ public interface ReceivedTaskDao {
     // 根据任务id和用户id查询是否已接受该任务
     @Select("select id,  task_id, receiver_id, receive_time from received_task where " +
             "task_id = #{taskId} and receiver_id = #{studentId} and is_final = '0'")
-    public ReceivedTask getReceivedTaskByTaskIdAndStudentId(@Param("taskId") String taskId,
+    public ReceivedTask getReceivedTaskByStudentIdAndTaskId(@Param("taskId") String taskId,
                                                             @Param("studentId") String studentId);
 
     // 添加已接受任务
     @Insert("insert into received_task (id, receiver_id, task_id)  values (#{id}, #{receiverId}, #{taskId})")
     public int addReceivedTask(ReceivedTask receivedTask);
+
+    // 根据id查询已接受任务记录
+    @Select("select id, task_id, receiver_id, receive_time from received_task where id = #{id} and is_final = '0'")
+    public ReceivedTask getReceivedTaskByIdNotFinal(@Param("id") String id);
+
+    // 根据学生id和已接受任务id删除已接受任务
+    @Delete(("delete from received_task where id = #{receivedTaskId}"))
+    public int deleteReceivedTaskByStudentIdAndReceivedTaskId(@Param("receivedTaskId") String receivedTaskId);
 }

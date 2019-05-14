@@ -12,9 +12,12 @@
 
 package com.snsoft.readingsystem.dao;
 
+import com.snsoft.readingsystem.pojo.PendingTask;
 import com.snsoft.readingsystem.pojo.StuTask;
 import com.snsoft.readingsystem.pojo.Task;
+import com.snsoft.readingsystem.returnPojo.AcceptedTaskInfo;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -57,4 +60,8 @@ public interface TaskDao {
     // 根据任务id和学生id查询是否可以接受该任务
     @Select("select task_id, student_id from stu_task where task_id = #{taskId} and student_id = #{studentId}")
     public StuTask getStuTaskByTaskIdAndStudentId(@Param("taskId") String taskId, @Param("studentId") String studentId);
+
+    // 根据学生id查询已接受的任务
+    public List<AcceptedTaskInfo> getAcceptedTasksInfoByStudentId(String userId, RowBounds rowBounds);
+
 }

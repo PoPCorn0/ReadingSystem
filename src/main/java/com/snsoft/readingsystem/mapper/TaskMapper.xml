@@ -22,4 +22,22 @@
         </foreach>
     </insert>
 
+    <select id="getAcceptedTasksInfoByStudentId" parameterType="string" resultType="acceptedTaskInfo">
+        select received_task.id received_task_id,
+               received_task.task_id,
+               task.team_id,
+               task.reward,
+               task.title,
+               task.content,
+               attachment.id    attachment_id,
+               received_task.receive_time
+        from received_task
+                 left join task on task.id = received_task.task_id
+                 left join attachment on task.id = attachment.rely_on_id
+        where received_task.receiver_id = #{studentId}
+          and received_task.is_final = '0'
+          and task.is_final = '0'
+        order by received_task.receive_time DESC
+    </select>
+
 </mapper>

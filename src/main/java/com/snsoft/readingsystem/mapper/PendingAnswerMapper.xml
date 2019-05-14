@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ @copyright ：神农大学生软件创新中心 版权所有 © 2019
+  ~
+  ~ @author 16级信息与计算科学潘鹏程
+  ~
+  ~ @version
+  ~
+  ~ @date 2019.05.14
+  ~
+  ~ @Description
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snsoft.readingsystem.dao.PendingAnswerDao">
+
+    <select id="getApprovedAnswers" parameterType="string" resultType="pendingAnswerInfo">
+        select pending_answer.id,
+               pending_answer.received_task_id,
+               pending_answer.title,
+               pending_answer.content,
+               pending_answer.commit_time,
+               pending_answer.check_time,
+               answer.praise_amount
+        from pending_answer
+                 left join answer on pending_answer.received_task_id = answer.received_task_id and answer.tier = 1
+        where pending_answer.author_id = #{id}
+        and pending_answer.check_mark = '1'
+        order by pending_answer.check_time DESC
+    </select>
+
+    <select id="getDisapprovedAnswers" parameterType="string" resultType="pendingAnswerInfo">
+        select pending_answer.id,
+               pending_answer.received_task_id,
+               pending_answer.title,
+               pending_answer.content,
+               pending_answer.commit_time,
+               pending_answer.check_time,
+               answer.praise_amount,
+               pending_answer.reason
+        from pending_answer
+                 left join answer on pending_answer.received_task_id = answer.received_task_id and answer.tier = 1
+        where pending_answer.author_id = #{id}
+        and pending_answer.check_mark = '2'
+        order by pending_answer.check_time DESC
+    </select>
+</mapper>

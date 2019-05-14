@@ -15,6 +15,7 @@ package com.snsoft.readingsystem.controller.studentController;
 import com.snsoft.readingsystem.service.TaskService;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
+import com.snsoft.readingsystem.utils.PageUtil;
 import com.snsoft.readingsystem.utils.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,40 @@ public class StudentTaskController {
             return taskService.receiveTask(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+        }
+    }
+
+    /**
+     * 获取所有已接受可提交解读的任务
+     *
+     * @param user session中用户信息
+     * @param page 分页参数
+     * @return ModelAndView视图
+     */
+    @RequestMapping(value = "/student/getAcceptedTask", method = RequestMethod.GET)
+    public ModelAndView getAcceptedTask(@SessionAttribute("user") User user,
+                                        @RequestParam(value = "page", required = false) Integer page) {
+        try {
+            return taskService.getAcceptedTasksNotFinal(user.getId(), PageUtil.getRowBounds(page));
+        } catch (RuntimeException e) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+        }
+    }
+
+    /**
+     * 删除已接受任务
+     *
+     * @param user session中用户信息
+     * @param id   已接受任务id
+     * @return ModelAndView视图
+     */
+    @RequestMapping(value = "/student/deleteAcceptedTask", method = RequestMethod.POST)
+    public ModelAndView deleteAcceptedTask(@SessionAttribute("user") User user,
+                                           @RequestParam("id") String id) {
+        try {
+            return taskService.deleteAcceptedTask(user.getId(), id);
+        } catch (RuntimeException e) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
         }
     }

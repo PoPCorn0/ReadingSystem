@@ -14,8 +14,10 @@ package com.snsoft.readingsystem.service;
 
 import com.snsoft.readingsystem.dao.*;
 import com.snsoft.readingsystem.pojo.*;
+import com.snsoft.readingsystem.returnPojo.AcceptedTaskInfo;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,6 +39,8 @@ public class TaskService {
     UserDao userDao;
     @Resource
     AttachmentDao attachmentDao;
+    @Resource
+    PendingAnswerDao pendingAnswerDao;
 
     /**
      * 发布任务
@@ -135,7 +139,7 @@ public class TaskService {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法接受该任务");
         }
 
-        ReceivedTask receivedTask = receivedTaskDao.getReceivedTaskByTaskIdAndStudentId(taskId, userId);
+        ReceivedTask receivedTask = receivedTaskDao.getReceivedTaskByStudentIdAndTaskId(taskId, userId);
         if (receivedTask != null) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "重复接受任务");
         }
@@ -146,6 +150,59 @@ public class TaskService {
         receivedTask.setTaskId(taskId);
 
         return receivedTaskDao.addReceivedTask(receivedTask) == 1 ?
+                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
+                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+    }
+
+    /**
+     * 获取所有已接受可提交解读的任务
+     *
+     * @param userId    用户id
+     * @param rowBounds 分页参数
+     * @return ModelAndView视图
+     */
+    @Transactional
+    public ModelAndView getAcceptedTasksNotFinal(String userId, RowBounds rowBounds) {
+        // 获取除了提交解读时间commit_time、审核标记check_mark以外的数据
+        List<AcceptedTaskInfo> acceptedTaskInfos = taskDao.getAcceptedTasksInfoByStudentId(userId, rowBounds);
+
+        if (acceptedTaskInfos == null || acceptedTaskInfos.size() == 0) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+        } else {
+            // 为每个AcceptedTaskInfo添加提交解读时间、审核标记（如果提交过解读）
+            PendingAnswer pendingAnswer;
+            for (AcceptedTaskInfo at : acceptedTaskInfos) {
+                pendingAnswer =
+                        pendingAnswerDao.getPendingAnswerByReceivedTaskId(at.getReceivedTaskId());
+                if (pendingAnswer != null) {
+                    at.setCommitTime(pendingAnswer.getCommitTime());
+                    at.setCheckMark(pendingAnswer.getCheckMark());
+                }
+            }
+        }
+
+        return ModelAndViewUtil.getModelAndView("data", acceptedTaskInfos);
+    }
+
+    /**
+     * 删除已接受任务
+     *
+     * @param userId         用户id
+     * @param receivedTaskId 已接受任务id
+     * @return ModelAndView视图
+     */
+    @Transactional
+    public ModelAndView deleteAcceptedTask(String userId, String receivedTaskId) {
+        // 根据id已接受任务id查询已接受任务
+        ReceivedTask receivedTask = receivedTaskDao.getReceivedTaskByIdNotFinal(receivedTaskId);
+
+        // 判断该已接受任务是否存在和是否属于该用户
+        if (receivedTask == null || !receivedTask.getReceiverId().equals(userId)) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "未接受该任务");
+        }
+
+        // 删除已接受任务
+        return receivedTaskDao.deleteReceivedTaskByStudentIdAndReceivedTaskId(receivedTaskId) == 1 ?
                 ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
                 ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
     }

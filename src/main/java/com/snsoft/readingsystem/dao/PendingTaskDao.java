@@ -16,7 +16,10 @@ import com.snsoft.readingsystem.pojo.PendingTask;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface PendingTaskDao {
@@ -34,4 +37,18 @@ public interface PendingTaskDao {
     // 根据id删除待审核任务
     @Delete("delete from pendingTask where id = #{id}")
     public int deletePendingTaskById(String id);
+
+    // 根据学生id查询通过审核的任务
+    @Select("select id, title, content, team_id, commit_time, check_time from pending_task " +
+            "where check_mark = '1' " +
+            "and author_id = #{id} " +
+            "order by check_time DESC")
+    public List<PendingTask> getApprovedTasksByStudentId(String userId, RowBounds rowBounds);
+
+    // 根据学生id查询未通过审核的任务
+    @Select("select id, title, content, team_id, commit_time, check_time, reason from pending_task " +
+            "where check_mark = '2' " +
+            "and author_id = #{id} " +
+            "order by check_time DESC")
+    public List<PendingTask> getDisapprovedTasksByStudentId(String userId, RowBounds rowBounds);
 }

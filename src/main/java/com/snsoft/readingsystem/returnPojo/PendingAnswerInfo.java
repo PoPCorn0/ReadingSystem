@@ -5,24 +5,23 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.05.14
  *
  * @Description
  */
 
-package com.snsoft.readingsystem.pojo;
+package com.snsoft.readingsystem.returnPojo;
 
 import java.io.Serializable;
 
-public class PendingAnswer implements Serializable {
+public class PendingAnswerInfo implements Serializable {
     private String id;
     private String receivedTaskId;
-    private String authorId;
     private String title;
     private String content;
     private String commitTime;
     private String checkTime;
-    private char checkMark;
+    private int praiseAmount;
     private String reason;
 
     public String getId() {
@@ -39,14 +38,6 @@ public class PendingAnswer implements Serializable {
 
     public void setReceivedTaskId(String receivedTaskId) {
         this.receivedTaskId = receivedTaskId;
-    }
-
-    public String getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
     }
 
     public String getTitle() {
@@ -81,12 +72,12 @@ public class PendingAnswer implements Serializable {
         this.checkTime = checkTime;
     }
 
-    public char getCheckMark() {
-        return checkMark;
+    public int getPraiseAmount() {
+        return praiseAmount;
     }
 
-    public void setCheckMark(char checkMark) {
-        this.checkMark = checkMark;
+    public void setPraiseAmount(int praiseAmount) {
+        this.praiseAmount = praiseAmount;
     }
 
     public String getReason() {
@@ -99,15 +90,14 @@ public class PendingAnswer implements Serializable {
 
     @Override
     public String toString() {
-        return "PendingAnswer{" +
+        return "PendingAnswerInfo{" +
                 "id='" + id + '\'' +
                 ", receivedTaskId='" + receivedTaskId + '\'' +
-                ", authorId='" + authorId + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", commitTime='" + commitTime + '\'' +
                 ", checkTime='" + checkTime + '\'' +
-                ", checkMark=" + checkMark +
+                ", praiseAmount=" + praiseAmount +
                 ", reason='" + reason + '\'' +
                 '}';
     }
