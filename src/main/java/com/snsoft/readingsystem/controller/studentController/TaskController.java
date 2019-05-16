@@ -26,8 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller
-public class StudentTaskController {
+@Controller("Student_TaskController")
+@RequestMapping("student")
+public class TaskController {
     @Resource
     TaskService taskService;
 
@@ -38,7 +39,7 @@ public class StudentTaskController {
      * @param id   任务id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/receiveTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/receiveTask", method = RequestMethod.POST)
     public ModelAndView receiveTask(@SessionAttribute("user") User user,
                                     @RequestParam("id") String id) {
         try {
@@ -56,7 +57,7 @@ public class StudentTaskController {
      * @param page 分页参数
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/getAcceptedTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAcceptedTask", method = RequestMethod.GET)
     public ModelAndView getAcceptedTask(@SessionAttribute("user") User user,
                                         @RequestParam(value = "page", required = false) Integer page) {
         try {
@@ -73,7 +74,7 @@ public class StudentTaskController {
      * @param id   已接受任务id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/deleteAcceptedTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteAcceptedTask", method = RequestMethod.POST)
     public ModelAndView deleteAcceptedTask(@SessionAttribute("user") User user,
                                            @RequestParam("id") String id) {
         try {

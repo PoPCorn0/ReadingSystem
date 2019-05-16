@@ -13,25 +13,23 @@
 
 package com.snsoft.readingsystem.utils;
 
-public class AllConstant {
-    public static int CODE_SUCCESS = 0;
-    public static int CODE_FAILED = 1;
-    public static int CODE_ERROR = 2;
+public final class AllConstant {
+    public static final int CODE_SUCCESS = 0;
+    public static final int CODE_FAILED = 1;
+    public static final int CODE_ERROR = 2;
 
-    public static char IDENTITYMARK_TEACHER = '0';
-    public static char IDENTITYMARK_STUDENT = '1';
+    public static final char IDENTITYMARK_TEACHER = '0';
+    public static final char IDENTITYMARK_STUDENT = '1';
 
-    public static String MSG_SUCCESS = "操作成功";
-    public static String MSG_FAILED = "操作失败";
-    public static String MSG_ERROR = "发生异常";
-    public static String MSG_PERMISSION_DENIED = "权限不足";
+    public static final String MSG_SUCCESS = "操作成功";
+    public static final String MSG_FAILED = "操作失败";
+    public static final String MSG_ERROR = "发生异常";
+    public static final String MSG_PERMISSION_DENIED = "权限不足";
 
-    public static int PAGE_AMOUNT = 20;
+    public static final int PAGE_AMOUNT = 20;
 
-    public static char NOT_CHECK_YET = '0';
-    public static char CHECK_APPROVE = '1';
-    public static char CHECK_DISAPPROVE = '2';
-
-    public static char IS_NOT_READ = '0';
-    public static char IS_READ = '1';
+    public static final String PUBLISH_TASK = "publish_task";
+    public static final String PRAISE = "praise";
+    public static final String PAY_FOR_ANSWER = "pay_for_answer";
+    public static final String INITIAL_SCORE = "initial_score";
 }

@@ -28,7 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.UUID;
 
-@Controller
+@Controller("Teacher_TeamController")
+@RequestMapping("teacher")
 public class TeamController {
     @Resource
     TeamService teamService;
@@ -42,7 +43,7 @@ public class TeamController {
      * @param name 团队名
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/addTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/addTeam", method = RequestMethod.POST)
     public ModelAndView addTeam(@SessionAttribute("user") User user, @RequestParam("name") String name) {
         Team team = new Team();
         team.setId(UUID.randomUUID().toString());
@@ -50,8 +51,7 @@ public class TeamController {
         team.setTeacherId(user.getId());
 
         try {
-            return teamDao.addTeam(team) == 1 ? ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return teamService.addTeam(team);
         } catch (RuntimeException e) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
         }
@@ -63,7 +63,7 @@ public class TeamController {
      * @param id 要删除的团队id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/deleteTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteTeam", method = RequestMethod.POST)
     public ModelAndView deleteTeam(@SessionAttribute("user") User user, @RequestParam("id") String id) {
         try {
             return teamService.deleteTeam(user.getId(), id);
@@ -80,7 +80,7 @@ public class TeamController {
      * @param studentId 要添加的学生的id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/addToTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/addToTeam", method = RequestMethod.POST)
     public ModelAndView addToTeam(@SessionAttribute("user") User user, @RequestParam("teamId") String teamId,
                                   @RequestParam("studentId") String studentId) {
         try {
@@ -98,7 +98,7 @@ public class TeamController {
      * @param studentId 要删除的学生的id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/removeFromTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/removeFromTeam", method = RequestMethod.POST)
     public ModelAndView removeFromTeam(@SessionAttribute("user") User user,
                                        @RequestParam("teamId") String teamId,
                                        @RequestParam("studentId") String studentId) {

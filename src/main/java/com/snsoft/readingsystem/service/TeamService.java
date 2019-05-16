@@ -19,13 +19,17 @@ import com.snsoft.readingsystem.dao.UserDao;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.pojo.TeamStu;
+import com.snsoft.readingsystem.returnPojo.StudentInfo;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
+import com.snsoft.readingsystem.utils.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TeamService {
@@ -59,6 +63,8 @@ public class TeamService {
         teamDao.deleteTeamStuByTeamId(teamId);
         taskDao.setTaskFinalByTeamId(teamId);
         receivedTaskDao.setReceivedTaskFinalByTeamId(teamId);
+        // TODO 将属于该团队尚未审核的任务、解读&追加解读设为不通过
+        // TODO 将属于该团队的未截止任务的可接受者全部删除，写入定时任务中
 
         //删除团队
         return teamDao.deleteTeam(teamId) == 1 ?
@@ -150,10 +156,60 @@ public class TeamService {
 
         taskDao.updateTaskByTeamIdAndStudentId(teamId, studentId, '1');
         receivedTaskDao.updateReceivedTaskByTeamIdAndStudentId(teamId, studentId, '1');
+        // TODO 将该用户属于该团队尚未审核的任务、解读&追加解读设为不通过
 
         //从团队中移除该学生
         return teamDao.updateTeamStu(teamId, studentId, '1') == 1 ?
                 ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
                 ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+    }
+
+    /**
+     * 添加团队
+     *
+     * @param team 团队对象
+     * @return ModelAndView视图
+     */
+    @Transactional
+    public ModelAndView addTeam(Team team) {
+        if (teamDao.addTeam(team) != 1) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        }
+
+        if (teamDao.addScoreStandard(team.getId()) != 1) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        }
+
+        return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+    }
+
+    /**
+     * 根据团队id 获取所有学生信息
+     *
+     * @param teamId 团队id
+     * @return ModelAndView视图
+     */
+    public ModelAndView getStudentsByTeamId(String teamId) {
+        Team team = teamDao.getTeamById(teamId);
+
+        if (team == null) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该团队不存在");
+        }
+
+        List<StudentInfo> students = teamDao.getStudentsByTeamId(teamId);
+        if (students == null) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        }
+
+        String assistantId = team.getAssistantId();
+
+        for (StudentInfo student : students
+        ) {
+            if (student.getId().equals(assistantId)) {
+                student.setIsAssistant('1');
+            } else student.setIsAssistant('0');
+        }
+
+        return ModelAndViewUtil.getModelAndView("data", students);
     }
 }

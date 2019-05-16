@@ -25,10 +25,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller
-public class SetAssistantController {
+@Controller("Teacher_AssistantController")
+@RequestMapping("teacher")
+public class AssistantController {
     @Resource
-    AssistantService userService;
+    AssistantService assistantService;
 
     /**
      * 设置导师助手，如果传入的id已经是导师助手则取消
@@ -38,12 +39,12 @@ public class SetAssistantController {
      * @param teamId    团队id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/setAssistant", method = RequestMethod.POST)
+    @RequestMapping(value = "/setAssistant", method = RequestMethod.POST)
     public ModelAndView setAssistant(@SessionAttribute("user") User user,
                                      @RequestParam("studentId") String studentId,
                                      @RequestParam("teamId") String teamId) {
         try {
-            return userService.setAssistant(user.getId(), studentId, teamId);
+            return assistantService.setAssistant(user.getId(), studentId, teamId);
         } catch (RuntimeException e) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
         }

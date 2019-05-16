@@ -26,8 +26,8 @@ public class TeacherInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         response.setContentType("text/html;charset=utf-8");
         User user = (User) request.getSession().getAttribute("user");
-        InterceptorReturnData data = new InterceptorReturnData();
         if (user.getIdentityMark() != AllConstant.IDENTITYMARK_TEACHER) {
+            InterceptorReturnData data = new InterceptorReturnData();
             data.setCode(AllConstant.CODE_FAILED);
             data.setMsg(AllConstant.MSG_PERMISSION_DENIED);
             response.getWriter().print(JSON.toJSONString(data));

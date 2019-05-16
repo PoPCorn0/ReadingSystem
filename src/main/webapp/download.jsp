@@ -5,8 +5,6 @@
 <body>
 
 <h3>文件下载</h3> -->
-<a href="download.do?id=fd7a40aa-a68a-4172-b397-81c388de71b6">下载</a>
-<br/>
-<a href="download.do?id=3d9d2b50-eed7-4b2d-bd70-007ab7681405">下载</a>
+<a href="common/download.do?id=9c8fa78e-34fe-424b-adcb-5f82bdf5fb00">下载</a>
 </body>
 </html>

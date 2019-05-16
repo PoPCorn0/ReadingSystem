@@ -50,9 +50,15 @@ public interface PendingAnswerDao {
     @Delete("delete from pending_answer where id = #{id}")
     public int deletePendingAnswer(@Param("id") String id);
 
-    // 根据用户id查询已通过审核的解读
+    // 根据学生id查询已通过审核的解读
     public List<PendingAnswerInfo> getApprovedAnswers(String studentId, RowBounds rowBounds);
 
-    // 根据用户id查询未通过审核的解读
-    public List<PendingAnswerInfo> getDisapprovedAnswers(String studentId, RowBounds rowBounds);
+    // 根据学生id查询未通过审核的解读
+    public List<PendingAnswer> getDisapprovedAnswers(String studentId, RowBounds rowBounds);
+
+    // 根据学生id查询所有尚未审核的解读
+    public List<PendingAnswerInfo> getStudentPendingAnswerInfo(String id, RowBounds rowBounds);
+
+    // 根据导师id查询创建的团队的所有尚未审核的解读
+    public List<PendingAnswerInfo> getTeacherPendingAnswerInfo(String id, RowBounds rowBounds);
 }

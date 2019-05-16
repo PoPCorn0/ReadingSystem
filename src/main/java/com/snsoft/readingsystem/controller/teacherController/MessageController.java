@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@Controller("Teacher_MessageController")
+@RequestMapping("teacher")
 public class MessageController {
 
     @Resource
@@ -45,7 +46,7 @@ public class MessageController {
      * @param receiver 接受者id列表
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/sendMessage", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
     public ModelAndView sendMessage(@RequestParam("content") String content,
                                     @RequestBody List<String> receiver) {
         ArrayList<Message> messages = new ArrayList<>();

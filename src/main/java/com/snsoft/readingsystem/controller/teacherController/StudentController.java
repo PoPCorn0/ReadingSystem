@@ -26,7 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller
+@Controller("Teacher_StudentController")
+@RequestMapping("/teacher")
 public class StudentController {
 
     @Resource
@@ -41,7 +42,7 @@ public class StudentController {
      * @param score 学生初始积分
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "teacher/addStudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/addStudent", method = RequestMethod.POST)
     public ModelAndView addStudent(@RequestParam("id") String id,
                                    @RequestParam("pwd") String pwd,
                                    @RequestParam("name") String name,
@@ -66,7 +67,7 @@ public class StudentController {
      * @param id   学生id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/deleteStudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteStudent", method = RequestMethod.POST)
     public ModelAndView deleteStudent(@SessionAttribute("user") User user,
                                       @RequestParam("id") String id) {
         try {

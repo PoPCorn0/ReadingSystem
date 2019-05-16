@@ -32,7 +32,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@Controller("Student_AnswerController")
+@RequestMapping("/student")
 public class PendingAnswerController {
     @Resource
     PendingAnswerService pendingAnswerService;
@@ -48,7 +49,7 @@ public class PendingAnswerController {
      * @param content        内容
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/commitAnswer", method = RequestMethod.POST)
+    @RequestMapping(value = "/commitAnswer", method = RequestMethod.POST)
     public ModelAndView commitAnswer(@SessionAttribute("user") User user,
                                      @RequestParam("receivedTaskId") String receivedTaskId,
                                      @RequestParam("title") String title,
@@ -74,7 +75,7 @@ public class PendingAnswerController {
      * @param id   待审核解读id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/deletePendingAnswer", method = RequestMethod.POST)
+    @RequestMapping(value = "/deletePendingAnswer", method = RequestMethod.POST)
     public ModelAndView deletePendingAnswer(@SessionAttribute("user") User user,
                                             @RequestParam("id") String id) {
         try {
@@ -92,7 +93,7 @@ public class PendingAnswerController {
      * @param page 分页参数
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/getApprovedAnswer", method = RequestMethod.GET)
+    @RequestMapping(value = "/getApprovedAnswer", method = RequestMethod.GET)
     public ModelAndView getApprovedAnswer(@SessionAttribute("user") User user,
                                           @RequestParam(value = "page", required = false) Integer page) {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
@@ -113,12 +114,12 @@ public class PendingAnswerController {
      * @param page 分页参数
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/getDisapprovedAnswer", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDisapprovedAnswer", method = RequestMethod.GET)
     public ModelAndView getDisapprovedAnswer(@SessionAttribute("user") User user,
                                              @RequestParam(value = "page", required = false) Integer page) {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
 
-        List<PendingAnswerInfo> disapprovedAnswers = pendingAnswerDao.getDisapprovedAnswers(user.getId(), rowBounds);
+        List<PendingAnswer> disapprovedAnswers = pendingAnswerDao.getDisapprovedAnswers(user.getId(), rowBounds);
 
         if (disapprovedAnswers == null) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);

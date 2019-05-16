@@ -64,4 +64,7 @@ public interface TaskDao {
     // 根据学生id查询已接受的任务
     public List<AcceptedTaskInfo> getAcceptedTasksInfoByStudentId(String userId, RowBounds rowBounds);
 
+    // 根据id查询任务
+    @Select("select id, team_id, author_id, reward, title, content, commit_time, end_time from task where id = #{id}")
+    public Task getTaskById(String taskId);
 }

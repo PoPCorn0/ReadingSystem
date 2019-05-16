@@ -26,23 +26,69 @@
         from pending_answer
                  left join answer on pending_answer.received_task_id = answer.received_task_id and answer.tier = 1
         where pending_answer.author_id = #{id}
-        and pending_answer.check_mark = '1'
+          and pending_answer.check_mark = '1'
         order by pending_answer.check_time DESC
     </select>
 
-    <select id="getDisapprovedAnswers" parameterType="string" resultType="pendingAnswerInfo">
+    <select id="getDisapprovedAnswers" parameterType="string" resultType="pendingAnswer">
+        select id,
+               received_task_id,
+               title,
+               content,
+               commit_time,
+               check_time,
+               reason
+        from pending_answer
+        where author_id = #{id}
+          and check_mark = '2'
+        order by check_time DESC
+    </select>
+
+    <select id="getStudentPendingAnswerInfo" resultType="pendingTaskInfo">
         select pending_answer.id,
+               received_task.task_id taskId,
                pending_answer.received_task_id,
+               pending_answer.author_id,
+               student.name          author_name,
                pending_answer.title,
                pending_answer.content,
-               pending_answer.commit_time,
-               pending_answer.check_time,
-               answer.praise_amount,
-               pending_answer.reason
+               attachment.id         attachmentId,
+               pending_answer.commit_time
         from pending_answer
-                 left join answer on pending_answer.received_task_id = answer.received_task_id and answer.tier = 1
-        where pending_answer.author_id = #{id}
-        and pending_answer.check_mark = '2'
-        order by pending_answer.check_time DESC
+                 left join received_task on
+            received_task.id = pending_answer.received_task_id
+                 left join student on
+            student.id = pending_answer.author_id
+                 left join attachment on
+            pending_answer.id = attachment.rely_on_id
+        where pending_answer.author_id = #{studentId}
+          and pending_answer.check_mark = '0';
     </select>
+
+    <select id="getTeacherPendingAnswerInfo" resultType="pendingAnswerInfo">
+        select pending_answer.id,
+               received_task.task_id taskId,
+               pending_answer.received_task_id,
+               pending_answer.author_id,
+               student.name          author_name,
+               pending_answer.title,
+               pending_answer.content,
+               attachment.id         attachmentId,
+               pending_answer.commit_time
+        from pending_answer
+                 left join received_task on
+            received_task.id = pending_answer.received_task_id
+                 left join student on
+            student.id = pending_answer.author_id
+                 left join attachment on
+            pending_answer.id = attachment.rely_on_id
+                 left join team on
+                team.id = (
+                select task.team_id
+                from task
+                where task.id = received_task.task_id)
+        where team.teacher_id = #{teacherId}
+          and pending_answer.check_mark = '0';
+    </select>
+
 </mapper>

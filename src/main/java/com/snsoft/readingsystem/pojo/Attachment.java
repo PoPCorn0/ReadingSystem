@@ -20,6 +20,7 @@ public class Attachment implements Serializable {
     private String authorId;
     private String savePath;
     private int size;
+    private String fileName;
 
     public String getId() {
         return id;
@@ -61,6 +62,14 @@ public class Attachment implements Serializable {
         this.size = size;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Override
     public String toString() {
         return "Attachment{" +
@@ -69,6 +78,7 @@ public class Attachment implements Serializable {
                 ", authorId='" + authorId + '\'' +
                 ", savePath='" + savePath + '\'' +
                 ", size=" + size +
+                ", fileName='" + fileName + '\'' +
                 '}';
     }
 }

@@ -13,6 +13,7 @@
 package com.snsoft.readingsystem.dao;
 
 import com.snsoft.readingsystem.pojo.Message;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
@@ -35,4 +36,8 @@ public interface MessageDao {
 
     // 批量发送消息通知
     public int sendMessages(ArrayList<Message> messages);
+
+    // 删除一条消息通知
+    @Delete("delete from message where id = #{id}")
+    public int deleteMessage(String id);
 }

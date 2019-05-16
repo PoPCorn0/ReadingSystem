@@ -15,6 +15,8 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.UserDao;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Teacher;
+import com.snsoft.readingsystem.returnPojo.PersonalInfo;
+import com.snsoft.readingsystem.service.UserService;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.User;
@@ -25,11 +27,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller
+@Controller("Common_LoginAndOutController")
 //该注解将类型为User的对象自动存入Session中
 @SessionAttributes(types = {User.class})
-public class LogInAndOutController {
+@RequestMapping("/common")
+public class LoginAndOutController {
 
+    @Resource
+    UserService userService;
     @Resource
     UserDao userDao;
 
@@ -39,7 +44,7 @@ public class LogInAndOutController {
      * @param id  用户账号
      * @param pwd 用户密码
      */
-    @RequestMapping(value = "/common/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView Login(@RequestParam("id") String id, @RequestParam("pwd") String pwd) {
         Teacher teacher;
         Student student;
@@ -77,10 +82,9 @@ public class LogInAndOutController {
      *
      * @param sessionStatus Spring会自动注入该对象
      */
-    @RequestMapping("/common/logout")
+    @RequestMapping("/logout")
     public String logout(SessionStatus sessionStatus) {
         sessionStatus.setComplete();
         return "redirect:/login.html";
     }
-
 }

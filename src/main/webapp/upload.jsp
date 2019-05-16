@@ -8,7 +8,7 @@
 </head>
 <body>
 <h2>文件上传</h2>
-<form enctype="multipart/form-data" action="upload.do" method="post">
+<form enctype="multipart/form-data" action="common/upload.do" method="post">
     <table>
         <tr>
             <td>请选择文件:</td>

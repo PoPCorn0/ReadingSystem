@@ -25,8 +25,9 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
-public class TeacherTaskController {
+@Controller(value = "Teacher_TaskController")
+@RequestMapping("teacher")
+public class TaskController {
     @Resource
     TaskService taskService;
 
@@ -42,7 +43,7 @@ public class TeacherTaskController {
      * @param endTime  任务结束时间
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/publishTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/publishTask", method = RequestMethod.POST)
     public ModelAndView publishTask(@SessionAttribute("user") User user,
                                     @RequestParam("teamId") String teamId,
                                     @RequestParam("reward") int reward,
@@ -74,7 +75,7 @@ public class TeacherTaskController {
      * @param id   任务id
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/teacher/deleteTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteTask", method = RequestMethod.POST)
     public ModelAndView deleteTask(@SessionAttribute("user") User user, @RequestParam("id") String id) {
         try {
             return taskService.deleteTask(user.getId(), id);

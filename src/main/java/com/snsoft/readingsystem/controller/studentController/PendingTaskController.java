@@ -31,7 +31,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@Controller("Student_PendingTaskController")
+@RequestMapping("/student")
 public class PendingTaskController {
 
     @Resource
@@ -39,7 +40,7 @@ public class PendingTaskController {
     @Resource
     PendingTaskDao pendingTaskDao;
 
-    @RequestMapping(value = "/student/commitTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/commitTask", method = RequestMethod.POST)
     public ModelAndView commitTask(@SessionAttribute("user") User user,
                                    @RequestParam("title") String title,
                                    @RequestParam("content") String content,
@@ -58,7 +59,7 @@ public class PendingTaskController {
         }
     }
 
-    @RequestMapping(value = "/student/deletePendingTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/deletePendingTask", method = RequestMethod.POST)
     public ModelAndView deletePendingTask(@SessionAttribute("user") User user,
                                           @RequestParam("id") String id) {
         try {
@@ -74,7 +75,7 @@ public class PendingTaskController {
      * @param page 分页参数
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/getApprovedTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/getApprovedTask", method = RequestMethod.GET)
     public ModelAndView getApprovedTask(@SessionAttribute("user") User user,
                                         @RequestParam(value = "page", required = false) Integer page) {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
@@ -96,7 +97,7 @@ public class PendingTaskController {
      * @param page 分页参数
      * @return ModelAndView视图
      */
-    @RequestMapping(value = "/student/getDisapprovedTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDisapprovedTask", method = RequestMethod.GET)
     public ModelAndView getDisapprovedTask(@SessionAttribute("user") User user,
                                            @RequestParam(value = "page", required = false) Integer page) {
         RowBounds rowBounds = PageUtil.getRowBounds(page);

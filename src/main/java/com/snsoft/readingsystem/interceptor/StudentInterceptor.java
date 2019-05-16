@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class StudentInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        response.setContentType("text/html;charset=utf-8");
         User user = (User) request.getSession().getAttribute("user");
         if (user.getIdentityMark() != AllConstant.IDENTITYMARK_STUDENT) {
             InterceptorReturnData data = new InterceptorReturnData();

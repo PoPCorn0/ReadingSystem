@@ -28,6 +28,12 @@ public class MessageService {
     @Resource
     MessageDao messageDao;
 
+    /**
+     * 向一个或多个学生发送消息通知
+     *
+     * @param messages 消息通知对象
+     * @return ModelAndView视图
+     */
     @Transactional
     public ModelAndView sendMessage(ArrayList<Message> messages) {
         return messageDao.sendMessages(messages) == messages.size() ?

@@ -14,6 +14,7 @@ package com.snsoft.readingsystem.dao;
 
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.pojo.TeamStu;
+import com.snsoft.readingsystem.returnPojo.StudentInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -44,13 +45,16 @@ public interface TeamDao {
 
     //查询学生是否在团队中
     @Select("select team_id, student_id from team_stu " +
-            "where team_id = #{teamId} and student_id = #{studentId} and is_remove = '0'")
+            "where team_id = #{teamId} " +
+            "and student_id = #{studentId} " +
+            "and is_remove = '0'")
     public TeamStu getTeamStuByTeamIdAndStudentId(@Param("teamId") String teamId,
                                                   @Param("studentId") String studentId);
 
     //查询学生所在的所有团队
     @Select("select team_id, student_id from team_stu" +
-            "where student_id = #{studentId} and is_remove = '0'")
+            "where student_id = #{studentId} " +
+            "and is_remove = '0'")
     public List<TeamStu> getTeamStuByStudentId(String studentId);
 
     //将学生添加到团队中
@@ -59,11 +63,42 @@ public interface TeamDao {
 
     //查询学生是否被团队中移除
     @Select("select team_id, student_id from team_stu " +
-            "where student_id = #{studentId} and team_id = #{teamId} and is_remove = '1'")
+            "where student_id = #{studentId} and " +
+            "team_id = #{teamId} and is_remove = '1'")
     public TeamStu getRemovedTeamStu(@Param("teamId") String teamId, @Param("studentId") String studentId);
 
     // 更新team_stu表的移除标记
     @Update("update team_stu set is_remove = #{isRemove} " +
-            "where team_id = #{teamId} and student_id = #{studentId}")
+            "where team_id = #{teamId} " +
+            "and student_id = #{studentId}")
     public int updateTeamStu(String teamId, String studentId, char isRemove);
+
+    // 添加团队时在score_standard表中添加一条该团队的积分标准记录
+    @Insert("insert into score_standard (team_id) values (#{teamId})")
+    public int addScoreStandard(String teamId);
+
+    // 查询学生所在的所有团队信息
+    @Select("select id, name, teacher_id, assistant_id from team where id in " +
+            "(" +
+            "select team_id from team_stu " +
+            "where student_id = #{studentId}" +
+            ") " +
+            "and is_remove = '0'")
+    public List<Team> getTeamByStudentId(@Param("studentId") String studentId);
+
+    // 查询导师创建的所有团队信息
+    @Select("select id, name, teacher_id, assistant_id from team " +
+            "where teacher_id = #{teacherId} " +
+            "and is_remove = '0'")
+    public List<Team> getTeamByTeacherId(@Param("teacherId") String teacherId);
+
+    // 根据团队id查询所有的学生
+    @Select("select id, name, score from student " +
+            "where id in " +
+            "(" +
+            "select student_id from team_stu " +
+            "where team_id = #{teamId}" +
+            ") " +
+            "and is_remove = '0'")
+    public List<StudentInfo> getStudentsByTeamId(@Param("teamId") String id);
 }

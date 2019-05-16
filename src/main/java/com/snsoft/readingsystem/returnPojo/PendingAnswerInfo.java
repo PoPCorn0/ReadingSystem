@@ -16,6 +16,7 @@ import java.io.Serializable;
 
 public class PendingAnswerInfo implements Serializable {
     private String id;
+    private String taskId;
     private String receivedTaskId;
     private String title;
     private String content;
@@ -30,6 +31,14 @@ public class PendingAnswerInfo implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     public String getReceivedTaskId() {
@@ -92,6 +101,7 @@ public class PendingAnswerInfo implements Serializable {
     public String toString() {
         return "PendingAnswerInfo{" +
                 "id='" + id + '\'' +
+                ", taskId='" + taskId + '\'' +
                 ", receivedTaskId='" + receivedTaskId + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +

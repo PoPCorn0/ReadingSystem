@@ -13,6 +13,7 @@
 package com.snsoft.readingsystem.dao;
 
 import com.snsoft.readingsystem.pojo.PendingTask;
+import com.snsoft.readingsystem.returnPojo.PendingTaskInfo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -39,16 +40,14 @@ public interface PendingTaskDao {
     public int deletePendingTaskById(String id);
 
     // 根据学生id查询通过审核的任务
-    @Select("select id, title, content, team_id, commit_time, check_time from pending_task " +
-            "where check_mark = '1' " +
-            "and author_id = #{id} " +
-            "order by check_time DESC")
-    public List<PendingTask> getApprovedTasksByStudentId(String userId, RowBounds rowBounds);
+    public List<PendingTask> getApprovedTasksByStudentId(String studentId, RowBounds rowBounds);
 
     // 根据学生id查询未通过审核的任务
-    @Select("select id, title, content, team_id, commit_time, check_time, reason from pending_task " +
-            "where check_mark = '2' " +
-            "and author_id = #{id} " +
-            "order by check_time DESC")
-    public List<PendingTask> getDisapprovedTasksByStudentId(String userId, RowBounds rowBounds);
+    public List<PendingTask> getDisapprovedTasksByStudentId(String studentId, RowBounds rowBounds);
+
+    // 根据学生id查询尚未审核的任务
+    public List<PendingTaskInfo> getStudentPendingTasks(String studentId, RowBounds rowBounds);
+
+    // 根据导师id查询所创建的所有团队的尚未审核的任务
+    public List<PendingTaskInfo> getTeacherPendingTasks(String teacherId, RowBounds rowBounds);
 }

@@ -47,12 +47,14 @@ public class StudentService {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该ID已存在");
         } else if (studentById == null) {
             //添加学生
-            return userDao.addStudent(student) == 1 ? ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
+            return userDao.addStudent(student) == 1 ?
+                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
                     ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
         } else {
             //如果输入的是已移除的学生id，则将移除标记设为否
             student.setIsRemoved('0');
-            return userDao.updateStudent(student) == 1 ? ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
+            return userDao.updateStudent(student) == 1 ?
+                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
                     ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
         }
     }
@@ -79,7 +81,8 @@ public class StudentService {
             }
         }
 
-        return userDao.removeStudent(studentId) == 1 ? ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
+        return userDao.removeStudent(studentId) == 1 ?
+                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
                 ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
     }
 }

@@ -57,25 +57,6 @@ public class ModelAndViewUtil {
         return mv;
     }
 
-    public static ModelAndView getModelAndView(int code, String msg, Object data) {
-        ModelAndView mv = new ModelAndView();
-        mv.setView(new MappingJackson2JsonView());
-        if (code == AllConstant.CODE_SUCCESS) {
-            mv.addObject("code", AllConstant.CODE_SUCCESS);
-            mv.addObject("msg", msg);
-            mv.addObject("data", data);
-        } else if (code == AllConstant.CODE_FAILED) {
-            mv.addObject("code", AllConstant.CODE_FAILED);
-            mv.addObject("msg", msg);
-            mv.addObject("data", data);
-        } else if (code == AllConstant.CODE_ERROR) {
-            mv.addObject("code", AllConstant.CODE_ERROR);
-            mv.addObject("msg", msg);
-            mv.addObject("data", data);
-        }
-        return mv;
-    }
-
     public static ModelAndView getLoginModelAndView() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("login");

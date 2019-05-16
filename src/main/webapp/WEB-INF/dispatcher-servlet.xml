@@ -21,15 +21,6 @@
 
     <mvc:default-servlet-handler/>
 
-    <!--<bean id="stringConverter"-->
-    <!--class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
-    <!--<property name="supportedMediaTypes">-->
-    <!--<reciever>-->
-    <!--<value>text/html;charset=UTF-8</value>-->
-    <!--</reciever>-->
-    <!--</property>-->
-    <!--</bean>-->
-
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**.do"/>
@@ -38,7 +29,6 @@
             <mvc:mapping path="/student/**.do"/>
             <mvc:mapping path="/check/**.do"/>
             <mvc:exclude-mapping path="/common/login.do"/>
-            <mvc:exclude-mapping path="/test.do"/>
             <bean class="com.snsoft.readingsystem.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
