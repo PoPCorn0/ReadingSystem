@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.14
+  ~ @date 2019.05.19
   ~
   ~ @Description
   -->
@@ -37,10 +37,12 @@
                student.name  author_name,
                pending_task.title,
                pending_task.content,
-               pending_task.team_id,
+               team.name,
                attachment.id attachment_id,
                pending_task.commit_time
         from pending_task
+                 left join team on
+            team.id = pending_task.team_id
                  left join student on
             pending_task.author_id = student.id
                  left join attachment on
@@ -55,10 +57,12 @@
                student.name  author_name,
                pending_task.title,
                pending_task.content,
-               pending_task.team_id,
+               team.name,
                attachment.id attachment_id,
                pending_task.commit_time
         from pending_task
+                 left join team on
+            team.id = pending_task.team_id
                  left join student on
             pending_task.author_id = student.id
                  left join attachment on

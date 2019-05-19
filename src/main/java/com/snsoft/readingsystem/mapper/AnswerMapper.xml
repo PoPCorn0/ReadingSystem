@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ @copyright ：神农大学生软件创新中心 版权所有 © 2019
+  ~
+  ~ @author 16级信息与计算科学潘鹏程
+  ~
+  ~ @version
+  ~
+  ~ @date 2019.05.19
+  ~
+  ~ @Description
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snsoft.readingsystem.dao.AnswerDao">
+    <select id="getTeacherAnswerInfo" parameterType="string" resultType="answerInfo">
+        select answer.id,
+               answer.received_task_id,
+               answer.author_id,
+               student.name                                              author_name,
+               answer.title,
+               answer.content,
+               (select team.name from team where team.id = task.team_id) team_name,
+               attachment.id                                             attachment_id,
+               answer.commit_time,
+               answer.praise_amount
+        from answer
+                 left join student on student.id = answer.author_id
+                 left join task on task.id = answer.task_id
+                 left join attachment on attachment.rely_on_id = answer.id
+        where task.team_id in (
+            select team.id
+            from team
+            where team.teacher_id = #{teacherId}
+              and team.is_remove = '0')
+          and answer.tier = 1
+        order by answer.commit_time DESC
+    </select>
+
+    <select id="getStudentAnswerInfo" parameterType="string" resultType="answerInfo">
+        select answer.id,
+               answer.received_task_id,
+               answer.author_id,
+               student.name                                              author_name,
+               answer.title,
+               answer.content,
+               (select team.name from team where team.id = task.team_id) team_name,
+               attachment.id                                             attachment_id,
+               answer.commit_time,
+               answer.praise_amount,
+               (
+                   select count(pay_record.id)
+                   from pay_record
+                   where pay_record.answer_id = answer.id
+                     and pay_record.pay_id = #{studentId})               is_paid
+        from answer
+                 left join student on
+            student.id = answer.author_id
+                 left join task on
+            task.id = answer.task_id
+                 left join attachment on
+            attachment.rely_on_id = answer.id
+        where task.team_id in (
+            select team_stu.team_id
+            from team_stu
+            where team_stu.student_id = #{studentId}
+              and team_stu.is_remove = '0')
+          and answer.tier = 1
+        order by answer.commit_time DESC
+    </select>
+
+    <select id="getAnswerInfosByReceivedTaskId" parameterType="string" resultType="answerInfo">
+        select answer.id     answer_id,
+               answer.received_task_id,
+               answer.author_id,
+               student.name,
+               answer.tier,
+               answer.title,
+               answer.content,
+               attachment.id attachment_id,
+               answer.commit_time,
+               answer.praise_amount
+        from answer
+                 left join student on student.id = answer.author_id
+                 left join attachment on attachment.rely_on_id = answer.id
+        where answer.received_task_id = #{receivedTaskId}
+        order by tier
+    </select>
+</mapper>

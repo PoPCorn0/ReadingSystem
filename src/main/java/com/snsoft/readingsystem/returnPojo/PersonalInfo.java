@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.returnPojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -72,13 +74,6 @@ public class PersonalInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "PersonalInfo{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", score=" + score +
-                ", praiseAmount=" + praiseAmount +
-                ", taskAmount=" + taskAmount +
-                ", answerAmount=" + answerAmount +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

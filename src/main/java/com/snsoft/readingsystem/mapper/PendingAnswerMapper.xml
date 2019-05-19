@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.14
+  ~ @date 2019.05.19
   ~
   ~ @Description
   -->
@@ -52,7 +52,7 @@
                student.name          author_name,
                pending_answer.title,
                pending_answer.content,
-               attachment.id         attachmentId,
+               attachment.id         attachment_id,
                pending_answer.commit_time
         from pending_answer
                  left join received_task on
@@ -73,7 +73,7 @@
                student.name          author_name,
                pending_answer.title,
                pending_answer.content,
-               attachment.id         attachmentId,
+               attachment.id         attachment_id,
                pending_answer.commit_time
         from pending_answer
                  left join received_task on

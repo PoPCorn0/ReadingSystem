@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.12
+  ~ @date 2019.05.19
   ~
   ~ @Description
   -->
@@ -17,7 +17,7 @@
 
     <insert id="sendMessages" parameterType="list">
         insert into message (id, target_id, content) VALUES
-        <foreach collection="list" index="index" separator="," item="item">
+        <foreach collection="list" separator="," item="item">
             (#{item.id}, #{item.targetId}, #{item.content})
         </foreach>
     </insert>

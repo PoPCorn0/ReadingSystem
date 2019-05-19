@@ -1,4 +1,3 @@
-
 /*
  * @copyright ：神农大学生软件创新中心 版权所有 © 2019
  *
@@ -11,22 +10,25 @@
  * @Description
  */
 
-package com.snsoft.readingsystem.pojo;
+package com.snsoft.readingsystem.returnPojo;
 
 import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
-public class Answer implements Serializable {
+public class AnswerInfo implements Serializable {
     private String id;
-    private String taskId;
-    private String receivedTaskId;
+    private String receivedTaskInfo;
     private String authorId;
+    private String authorName;
     private int tier;
     private String title;
     private String content;
+    private String teamName;
+    private String attachmentId;
     private String commitTime;
     private int praiseAmount;
+    private char isPaid;
 
     public String getId() {
         return id;
@@ -36,28 +38,28 @@ public class Answer implements Serializable {
         this.id = id;
     }
 
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getReceivedTaskId() {
-        return receivedTaskId;
-    }
-
-    public void setReceivedTaskId(String receivedTaskId) {
-        this.receivedTaskId = receivedTaskId;
-    }
-
     public String getAuthorId() {
         return authorId;
     }
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
+    }
+
+    public String getReceivedTaskInfo() {
+        return receivedTaskInfo;
+    }
+
+    public void setReceivedTaskInfo(String receivedTaskInfo) {
+        this.receivedTaskInfo = receivedTaskInfo;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public int getTier() {
@@ -84,6 +86,22 @@ public class Answer implements Serializable {
         this.content = content;
     }
 
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
+    public void setAttachmentId(String attachmentId) {
+        this.attachmentId = attachmentId;
+    }
+
     public String getCommitTime() {
         return commitTime;
     }
@@ -98,6 +116,14 @@ public class Answer implements Serializable {
 
     public void setPraiseAmount(int praiseAmount) {
         this.praiseAmount = praiseAmount;
+    }
+
+    public char getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(char isPaid) {
+        this.isPaid = isPaid;
     }
 
     @Override

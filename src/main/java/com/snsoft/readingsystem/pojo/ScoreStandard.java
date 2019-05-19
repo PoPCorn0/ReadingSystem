@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.pojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -63,12 +65,6 @@ public class ScoreStandard implements Serializable {
 
     @Override
     public String toString() {
-        return "ScoreStandard{" +
-                "teamId='" + teamId + '\'' +
-                ", publishTask=" + publishTask +
-                ", praise=" + praise +
-                ", payForAnswer=" + payForAnswer +
-                ", intialScore=" + intialScore +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

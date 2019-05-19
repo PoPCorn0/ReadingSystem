@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.05.19
  *
  * @Description
  */
@@ -17,6 +17,7 @@ import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.returnPojo.PersonalInfo;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
+import com.snsoft.readingsystem.utils.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -52,5 +53,25 @@ public class UserService {
         personalInfo.setAnswerAmount(userDao.getAnswerAmount(studentId));
 
         return ModelAndViewUtil.getModelAndView("data", personalInfo);
+    }
+
+    @Transactional
+    public ModelAndView resetPwd(User user, String oldPwd, String newPwd) {
+
+        // 判断用户输入的旧密码是否匹配
+        if (!user.getPwd().equals(oldPwd)) {
+            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "旧密码验证失败");
+        }
+
+        // 更新密码
+        if (user.getIdentityMark() == AllConstant.IDENTITYMARK_TEACHER) {
+            return userDao.resetTeacherPwd(user.getId(), newPwd) == 1 ?
+                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
+                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        } else {
+            return userDao.resetStudentPwd(user.getId(), newPwd) == 1 ?
+                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
+                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        }
     }
 }

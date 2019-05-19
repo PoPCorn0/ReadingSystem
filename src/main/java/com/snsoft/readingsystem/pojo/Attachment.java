@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.08
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.pojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -72,13 +74,6 @@ public class Attachment implements Serializable {
 
     @Override
     public String toString() {
-        return "Attachment{" +
-                "id='" + id + '\'' +
-                ", relyOnId='" + relyOnId + '\'' +
-                ", authorId='" + authorId + '\'' +
-                ", savePath='" + savePath + '\'' +
-                ", size=" + size +
-                ", fileName='" + fileName + '\'' +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

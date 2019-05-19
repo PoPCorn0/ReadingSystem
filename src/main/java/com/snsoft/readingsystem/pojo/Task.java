@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.pojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 import java.util.List;
@@ -109,17 +111,6 @@ public class Task implements Serializable {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id='" + id + '\'' +
-                ", teamId='" + teamId + '\'' +
-                ", authorId='" + authorId + '\'' +
-                ", reward=" + reward +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", commitTime='" + commitTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", receiver=" + receiver +
-                ", isFinal=" + isFinal +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

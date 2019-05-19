@@ -5,19 +5,21 @@
  *
  * @version
  *
- * @date 2019.05.13
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.returnPojo;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.Serializable;
 
 public class AcceptedTaskInfo implements Serializable {
     private String receivedTaskId;
     private String taskId;
-    private String teamId;
+    private String teamName;
     private int reward;
     private String title;
     private String content;
@@ -42,12 +44,12 @@ public class AcceptedTaskInfo implements Serializable {
         this.taskId = taskId;
     }
 
-    public String getTeamId() {
-        return teamId;
+    public String getTeamName() {
+        return teamName;
     }
 
-    public void setTeamId(String teamId) {
-        this.teamId = teamId;
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
     public int getReward() {
@@ -108,17 +110,6 @@ public class AcceptedTaskInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "AcceptedTaskInfo{" +
-                "receivedTaskId='" + receivedTaskId + '\'' +
-                ", taskId='" + taskId + '\'' +
-                ", teamId='" + teamId + '\'' +
-                ", reward=" + reward +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", attachmentId='" + attachmentId + '\'' +
-                ", receiveTime='" + receiveTime + '\'' +
-                ", commitTime='" + commitTime + '\'' +
-                ", checkMark=" + checkMark +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

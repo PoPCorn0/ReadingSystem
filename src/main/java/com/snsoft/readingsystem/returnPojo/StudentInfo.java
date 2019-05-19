@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.returnPojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -54,11 +56,6 @@ public class StudentInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "StudentInfo{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", score=" + score +
-                ", isAssistant=" + isAssistant +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

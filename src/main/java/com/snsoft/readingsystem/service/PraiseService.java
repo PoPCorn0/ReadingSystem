@@ -5,18 +5,22 @@
  *
  * @version
  *
- * @date 2019.05.14
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.service;
 
-import com.snsoft.readingsystem.dao.*;
-import com.snsoft.readingsystem.pojo.*;
+import com.snsoft.readingsystem.dao.AnswerDao;
+import com.snsoft.readingsystem.dao.RecordDao;
+import com.snsoft.readingsystem.dao.TaskDao;
+import com.snsoft.readingsystem.dao.UserDao;
+import com.snsoft.readingsystem.pojo.Answer;
+import com.snsoft.readingsystem.pojo.PraiseRecord;
+import com.snsoft.readingsystem.pojo.Task;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,7 +34,7 @@ public class PraiseService {
     @Resource
     AnswerDao answerDao;
     @Resource
-    PraiseDao praiseDao;
+    RecordDao recordDao;
     @Resource
     UserDao userDao;
     @Resource
@@ -57,13 +61,13 @@ public class PraiseService {
         }
 
         // 查询当天的点赞记录
-        List<PraiseRecord> praiseRecords = praiseDao.getPraiseRecordsByStudentIdInADay(studentId);
+        List<PraiseRecord> praiseRecords = recordDao.getPraiseRecordsByStudentIdInADay(studentId);
         if (praiseRecords == null) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
         }
 
         // 判断是否重复点赞
-        if (praiseDao.getPraiseRecordByStudentIdAndAnswerId(studentId, answerId) != null) {
+        if (recordDao.getPraiseRecordByStudentIdAndAnswerId(studentId, answerId) != null) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法重复点赞");
         }
 
@@ -72,7 +76,7 @@ public class PraiseService {
         praiseRecord.setAnswerId(answerId);
         praiseRecord.setId(UUID.randomUUID().toString());
         praiseRecord.setPraiseId(studentId);
-        if (praiseDao.addPraiseRecord(praiseRecord) != 1) {
+        if (recordDao.addPraiseRecord(praiseRecord) != 1) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
         }
 

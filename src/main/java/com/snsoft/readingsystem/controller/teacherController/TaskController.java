@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.10
+ * @date 2019.05.19
  *
  * @Description
  */
@@ -54,7 +54,6 @@ public class TaskController {
         Task task = new Task();
         task.setId(UUID.randomUUID().toString());
         task.setTeamId(teamId);
-        task.setAuthorId(user.getId());
         task.setReward(reward);
         task.setTitle(title);
         task.setContent(content);

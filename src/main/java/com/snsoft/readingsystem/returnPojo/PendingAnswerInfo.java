@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.14
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.returnPojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -99,16 +101,6 @@ public class PendingAnswerInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "PendingAnswerInfo{" +
-                "id='" + id + '\'' +
-                ", taskId='" + taskId + '\'' +
-                ", receivedTaskId='" + receivedTaskId + '\'' +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", commitTime='" + commitTime + '\'' +
-                ", checkTime='" + checkTime + '\'' +
-                ", praiseAmount=" + praiseAmount +
-                ", reason='" + reason + '\'' +
-                '}';
+        return JSON.toJSONString((this));
     }
 }

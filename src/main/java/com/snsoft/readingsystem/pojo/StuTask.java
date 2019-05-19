@@ -5,12 +5,14 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.05.19
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.pojo;
+
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -36,9 +38,6 @@ public class StuTask implements Serializable {
 
     @Override
     public String toString() {
-        return "StuTask{" +
-                "taskId='" + taskId + '\'' +
-                ", studentId='" + studentId + '\'' +
-                '}';
+        return JSON.toJSONString((this));
     }
 }
