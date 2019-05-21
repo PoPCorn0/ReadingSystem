@@ -5,10 +5,9 @@
  *
  * @version
  *
- * @date 2019.3.12
+ * @date 2019.05.21
  *
  * @Description
- *
  */
 
 package com.snsoft.readingsystem.utils;
@@ -21,12 +20,12 @@ public final class AllConstant {
     public static final char IDENTITYMARK_TEACHER = '0';
     public static final char IDENTITYMARK_STUDENT = '1';
 
-    public static final String MSG_SUCCESS = "操作成功";
-    public static final String MSG_FAILED = "操作失败";
-    public static final String MSG_ERROR = "发生异常";
+    static final String MSG_SUCCESS = "操作成功";
+    static final String MSG_FAILED = "操作失败";
+    static final String MSG_ERROR = "发生异常";
     public static final String MSG_PERMISSION_DENIED = "权限不足";
 
-    public static final int PAGE_AMOUNT = 20;
+    static final int PAGE_AMOUNT = 20;
 
     public static final String PUBLISH_TASK = "publish_task";
     public static final String PRAISE = "praise";

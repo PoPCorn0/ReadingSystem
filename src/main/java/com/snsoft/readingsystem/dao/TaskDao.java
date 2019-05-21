@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.19
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -27,8 +27,8 @@ import java.util.List;
 public interface TaskDao {
 
     // 发布任务
-    @Insert("insert into task (id, team_id, reward, title, content, end_time) values(" +
-            "#{id}, #{teamId}, #{reward}, #{title}, #{content}, #{endTime})")
+    @Insert("insert into task (id, team_id, author_id, reward, title, content, end_time) values(" +
+            "#{id}, #{teamId}, #{authorId}, #{reward}, #{title}, #{content}, #{endTime})")
     int publishTask(Task task);
 
     // 为发布的任务添加可接受者
@@ -60,7 +60,8 @@ public interface TaskDao {
 
     // 根据任务id和学生id查询是否可以接受该任务
     @Select("select task_id, student_id from stu_task where task_id = #{taskId} and student_id = #{studentId}")
-    StuTask getStuTaskByTaskIdAndStudentId(@Param("taskId") String taskId, @Param("studentId") String studentId);
+    StuTask getStuTaskByTaskIdAndStudentId(@Param("taskId") String taskId,
+                                           @Param("studentId") String studentId);
 
     // 根据学生id查询已接受的任务
     List<AcceptedTaskInfo> getAcceptedTasksInfoByStudentId(String userId, RowBounds rowBounds);
@@ -77,4 +78,17 @@ public interface TaskDao {
 
     // 根据任务id查看任务详情
     TaskDetailInfo getTaskDetail(String taskId);
+
+    // 根据已接受任务id获取任务
+    @Select("select id, team_id, author_id, author_id, reward, title, content, commit_time, end_time from task " +
+            "where id = (select received_task.task_id from received_task where received_task.id = #{receivedTaskId} )")
+    Task getTaskByReceivedTaskId(String receivedTaskId);
+
+    // 删除团队时将该团队尚未结束的任务的可接受者从stu_task表中删除
+    @Delete("delete from stu_task " +
+            "where task_id in ( " +
+            "select task.id from task " +
+            "where task.team_id = #{teamId} " +
+            "and task.end_time > now() )")
+    void deleteStuTaskByTeamId(String teamId);
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.08
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -28,16 +28,16 @@ public interface MessageDao {
     // 根据id获取所有消息通知
     @Select("select id, target_id, content, send_time, is_read from message where target_id = #{id} " +
             "order by send_time DESC")
-    public List<Message> getMessages(String id, RowBounds rowBounds);
+    List<Message> getMessages(String id, RowBounds rowBounds);
 
     // 发送一条新消息通知
     @Insert("insert into message (id, target_id, content) values(#{id}, #{targetId}, #{content})")
-    public void sendMessage(Message message);
+    int sendMessage(Message message);
 
     // 批量发送消息通知
-    public int sendMessages(ArrayList<Message> messages);
+    int sendMessages(ArrayList<Message> messages);
 
     // 删除一条消息通知
     @Delete("delete from message where id = #{id}")
-    public int deleteMessage(String id);
+    int deleteMessage(String id);
 }

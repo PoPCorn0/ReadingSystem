@@ -5,30 +5,25 @@
  *
  * @version
  *
- * @date 2019.05.09
+ * @date 2019.05.21
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.service;
 
-import com.snsoft.readingsystem.dao.ReceivedTaskDao;
-import com.snsoft.readingsystem.dao.TaskDao;
-import com.snsoft.readingsystem.dao.TeamDao;
-import com.snsoft.readingsystem.dao.UserDao;
+import com.snsoft.readingsystem.dao.*;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.pojo.TeamStu;
 import com.snsoft.readingsystem.returnPojo.StudentInfo;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +36,11 @@ public class TeamService {
     TaskDao taskDao;
     @Resource
     ReceivedTaskDao receivedTaskDao;
+    @Resource
+    PendingAnswerDao pendingAnswerDao;
+    @Resource
+    PendingTaskDao pendingTaskDao;
+
 
     /**
      * 删除团队，不可恢复
@@ -63,8 +63,9 @@ public class TeamService {
         teamDao.deleteTeamStuByTeamId(teamId);
         taskDao.setTaskFinalByTeamId(teamId);
         receivedTaskDao.setReceivedTaskFinalByTeamId(teamId);
-        // TODO 将属于该团队尚未审核的任务、解读&追加解读设为不通过
-        // TODO 将属于该团队的未截止任务的可接受者全部删除，写入定时任务中
+        pendingTaskDao.setPendingTaskDisapproved(teamId, null);
+        pendingAnswerDao.setPendingAnswerDisapproved(teamId, null);
+        taskDao.deleteStuTaskByTeamId(teamId);
 
         //删除团队
         return teamDao.deleteTeam(teamId) == 1 ?
@@ -156,7 +157,14 @@ public class TeamService {
 
         taskDao.updateTaskByTeamIdAndStudentId(teamId, studentId, '1');
         receivedTaskDao.updateReceivedTaskByTeamIdAndStudentId(teamId, studentId, '1');
-        // TODO 将该用户属于该团队尚未审核的任务、解读&追加解读设为不通过
+        pendingAnswerDao.setPendingAnswerDisapproved(teamId, studentId);
+        pendingTaskDao.setPendingTaskDisapproved(teamId, studentId);
+
+        // 如果要删除的学生为导师助手则取消
+        if (team.getAssistantId().equals(studentId)) {
+            team.setAssistantId(null);
+            teamDao.updateAssistant(team);
+        }
 
         //从团队中移除该学生
         return teamDao.updateTeamStu(teamId, studentId, '1') == 1 ?

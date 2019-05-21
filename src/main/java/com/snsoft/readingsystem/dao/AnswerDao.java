@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.19
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -38,4 +38,11 @@ public interface AnswerDao {
 
     // 根据已接受任务id查看解读及其下所有追加解读
     List<AnswerInfo> getAnswerInfosByReceivedTaskId(String receivedTaskId);
+
+    // 添加一条解读&追加解读
+    int addAnswer(Answer answer);
+
+    // 根据已接受任务id查询当前最大解读层数
+    @Select("select count(tier) from answer where received_task_id = #{receivedTaskId}")
+    int getMaxTierByReceivedTaskId(String receivedTaskId);
 }

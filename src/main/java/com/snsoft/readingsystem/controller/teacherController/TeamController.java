@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.09
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -68,6 +68,7 @@ public class TeamController {
         try {
             return teamService.deleteTeam(user.getId(), id);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
         }
     }
@@ -86,7 +87,6 @@ public class TeamController {
         try {
             return teamService.addStudentToTeam(teamId, studentId, user.getId());
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
         }
     }

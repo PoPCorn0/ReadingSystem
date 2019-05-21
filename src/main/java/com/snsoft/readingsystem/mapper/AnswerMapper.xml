@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.19
+  ~ @date 2019.05.21
   ~
   ~ @Description
   -->
@@ -87,4 +87,9 @@
         where answer.received_task_id = #{receivedTaskId}
         order by tier
     </select>
+
+    <insert id="addAnswer" parameterType="answer">
+        insert into answer (id, task_id, received_task_id, author_id, tier, title, content)
+        values (#{id}, #{taskId}, #{receivedTaskId}, #{authorId}, #{tier}, #{title}, #{content})
+    </insert>
 </mapper>

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.13
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -14,10 +14,7 @@ package com.snsoft.readingsystem.dao;
 
 import com.snsoft.readingsystem.pojo.PendingAnswer;
 import com.snsoft.readingsystem.returnPojo.PendingAnswerInfo;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
@@ -31,34 +28,42 @@ public interface PendingAnswerDao {
             "id, received_task_id, author_id, title, content, commit_time, check_time, check_mark, reason" +
             " from pending_answer " +
             "where received_task_id = #{receivedTaskId}")
-    public PendingAnswer getPendingAnswerByReceivedTaskId(@Param("receivedTaskId") String receivedTaskId);
+    PendingAnswer getPendingAnswerByReceivedTaskId(@Param("receivedTaskId") String receivedTaskId);
 
     // 添加待审核解读
     @Insert("insert into pending_answer " +
             "(id, received_task_id, author_id, title, content) " +
             "values (#{id}, #{receivedTaskId}, #{authorId}, #{title}, #{content})")
-    public int addPendingAnswer(PendingAnswer pendingAnswer);
+    int addPendingAnswer(PendingAnswer pendingAnswer);
 
     // 根据id查询待审核解读
     @Select("select " +
             "id, received_task_id, author_id, title, content, commit_time, check_time, check_mark, reason " +
             "from pending_answer " +
             "where id = #{id}")
-    public PendingAnswer getPendingAnswerById(@Param("id") String id);
+    PendingAnswer getPendingAnswerById(@Param("id") String id);
 
     // 根据id删除待审核解读
     @Delete("delete from pending_answer where id = #{id}")
-    public int deletePendingAnswer(@Param("id") String id);
+    int deletePendingAnswer(@Param("id") String id);
 
     // 根据学生id查询已通过审核的解读
-    public List<PendingAnswerInfo> getApprovedAnswers(String studentId, RowBounds rowBounds);
+    List<PendingAnswerInfo> getApprovedAnswers(String studentId, RowBounds rowBounds);
 
     // 根据学生id查询未通过审核的解读
-    public List<PendingAnswer> getDisapprovedAnswers(String studentId, RowBounds rowBounds);
+    List<PendingAnswer> getDisapprovedAnswers(String studentId, RowBounds rowBounds);
 
     // 根据学生id查询所有尚未审核的解读
-    public List<PendingAnswerInfo> getStudentPendingAnswerInfo(String id, RowBounds rowBounds);
+    List<PendingAnswerInfo> getStudentPendingAnswerInfo(String id, RowBounds rowBounds);
 
     // 根据导师id查询创建的团队的所有尚未审核的解读
-    public List<PendingAnswerInfo> getTeacherPendingAnswerInfo(String id, RowBounds rowBounds);
+    List<PendingAnswerInfo> getTeacherPendingAnswerInfo(String id, RowBounds rowBounds);
+
+    // 根据id更新待审核解读&追加解读记录
+    @Update("update pending_answer set check_mark = #{checkMark} , reason = #{reason} where id = #{id}")
+    int checkAnswer(PendingAnswer pendingAnswer);
+
+    // 删除团队时将该团队所有待审核解读设为不通过,参数studentId为null，
+    // 删除团队成员时将该团队属于这个成员的待审核解读设为不通过，参数studentId不为null
+    void setPendingAnswerDisapproved(@Param("teamId") String teamId, @Param("studentId") String studentId);
 }

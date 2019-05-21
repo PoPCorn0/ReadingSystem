@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -25,13 +25,13 @@ public interface AttachmentDao {
     // 添加一条附件记录
     @Insert("insert into attachment (id, rely_on_id, author_id, save_path, size, file_name) " +
             "values (#{id}, #{relyOnId}, #{authorId}, #{savePath}, #{size}, #{fileName})")
-    public void addAttachment(Attachment attachment);
+    void addAttachment(Attachment attachment);
 
     // 根据id查询附件记录
     @Select("select id, rely_on_id, author_id, save_path, size, file_name from attachment where id = #{id}")
-    public Attachment getAttachment(@Param("id") String id);
+    Attachment getAttachment(@Param("id") String id);
 
     // 删除附件记录
     @Delete("delete from attachment where id = #{id}")
-    public void deleteAttachment(String id);
+    void deleteAttachment(String id);
 }

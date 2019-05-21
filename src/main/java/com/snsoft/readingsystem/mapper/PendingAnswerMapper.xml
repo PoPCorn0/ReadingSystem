@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.19
+  ~ @date 2019.05.21
   ~
   ~ @Description
   -->
@@ -90,5 +90,22 @@
         where team.teacher_id = #{teacherId}
           and pending_answer.check_mark = '0';
     </select>
+
+    <update id="setPendingAnswerDisapproved" parameterType="string">
+        update
+        pending_answer
+        set pending_answer.check_mark = '2'
+        where pending_answer.received_task_id in (
+        select received_task.id
+        from received_task
+        where received_task.task_id in (
+        select task.id
+        from task
+        where task.team_id = #{teamId}))
+        and pending_answer.check_mark = '0'
+        <if test="studentId != null">
+            and pending_answer.author_id = #{studentId}
+        </if>
+    </update>
 
 </mapper>

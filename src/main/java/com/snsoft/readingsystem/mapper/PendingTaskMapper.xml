@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.19
+  ~ @date 2019.05.21
   ~
   ~ @Description
   -->
@@ -72,4 +72,15 @@
         where team.teacher_id = #{teacherId}
           and pending_task.check_mark = '0'
     </select>
+
+    <update id="setPendingTaskDisapproved">
+        update
+        pending_task
+        set check_mark = '2'
+        where pending_task.team_id = #{teamId}
+        and check_mark = '0'
+        <if test="studentId != null">
+            and pending_task.author_id = #{studentId}
+        </if>
+    </update>
 </mapper>

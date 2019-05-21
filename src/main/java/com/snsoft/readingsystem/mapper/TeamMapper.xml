@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ @copyright ：神农大学生软件创新中心 版权所有 © 2019
+  ~
+  ~ @author 16级信息与计算科学潘鹏程
+  ~
+  ~ @version
+  ~
+  ~ @date 2019.05.21
+  ~
+  ~ @Description
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snsoft.readingsystem.dao.TeamDao">
+    <select id="getTeamByReceivedTaskId" parameterType="string" resultType="team">
+        select team.id, team.name, team.teacher_id, team.assistant_id
+        from team
+        where team.id = (
+            select task.team_id
+            from task
+            where task.id = (
+                select received_task.task_id
+                from received_task
+                where received_task.id = #{receivedTaskId}))
+    </select>
+</mapper>

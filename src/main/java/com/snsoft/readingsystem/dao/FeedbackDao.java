@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -20,5 +20,5 @@ import org.springframework.stereotype.Repository;
 public interface FeedbackDao {
     // 添加反馈
     @Insert("insert into feedback (id, author_id, content) values (#{id}, #{authorId}, #{content}")
-    public int addFeedback(Feedback feedback);
+    int addFeedback(Feedback feedback);
 }

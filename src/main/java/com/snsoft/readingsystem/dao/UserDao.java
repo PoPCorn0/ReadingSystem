@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.19
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -51,6 +51,10 @@ public interface UserDao {
     int updateScore(@Param("studentId") String studentId,
                     @Param("teamId") String teamId,
                     @Param("item") String item);
+
+    // 根据学生id增加指定积分
+    @Update("update student set score = score + #{score} where id = #{studentId}")
+    int addScore(@Param("studentId") String studentId, @Param("score") int score);
 
     // 根据id获取所有解读总赞数
     @Select("select sum(praise_amount) from answer where author_id = #{studentId}")
