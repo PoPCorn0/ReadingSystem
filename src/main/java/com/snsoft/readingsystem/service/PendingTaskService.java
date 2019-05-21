@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.12
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -15,6 +15,7 @@ package com.snsoft.readingsystem.service;
 import com.snsoft.readingsystem.dao.AttachmentDao;
 import com.snsoft.readingsystem.dao.PendingTaskDao;
 import com.snsoft.readingsystem.dao.TeamDao;
+import com.snsoft.readingsystem.pojo.Attachment;
 import com.snsoft.readingsystem.pojo.PendingTask;
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.utils.AllConstant;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.io.File;
 
 @Service
 public class PendingTaskService {
@@ -66,8 +68,15 @@ public class PendingTaskService {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法删除已通过审核的任务");
         }
 
-        attachmentDao.deleteAttachment(pendingTask.getId());
-        // TODO 删除任务文件
+        // 删除磁盘中文件，并从附件表中删除记录
+        Attachment attachment = attachmentDao.getAttachmentByRelyOnId(pendingTaskId);
+        if (attachment != null) {
+            File file = new File(attachment.getSavePath());
+            if (!file.delete()) {
+                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "任务附件删除失败");
+            }
+            attachmentDao.deleteAttachmentByRelyOnId(pendingTaskId);
+        }
 
         return pendingTaskDao.deletePendingTaskById(pendingTaskId) == 1 ?
                 ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :

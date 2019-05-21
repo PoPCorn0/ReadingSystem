@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.19
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -62,7 +62,7 @@ public class AnswerService {
         answerDetailInfo.setTaskReward(task.getReward());
         answerDetailInfo.setTaskTitle(task.getTitle());
         answerDetailInfo.setTaskContent(task.getContent());
-        Attachment taskAttachment = attachmentDao.getAttachment(task.getId());
+        Attachment taskAttachment = attachmentDao.getAttachmentByRelyOnId(task.getId());
         if (taskAttachment != null) {
             answerDetailInfo.setTaskAttachmentId(taskAttachment.getId());
         }

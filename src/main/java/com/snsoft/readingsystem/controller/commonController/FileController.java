@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -58,7 +58,7 @@ public class FileController {
      * 文件上传
      *
      * @param user       session中用户信息
-     * @param id         用户id
+     * @param id         任务或解读id
      * @param mark       附件标记，属于任务则为'1'，属于待审核任务则为'2'，属于解读&追加解读则为'3'，属于待审核解读&追加解读则为'4'
      * @param uploadFile 上传的文件
      * @return ModelAndView视图
@@ -153,12 +153,12 @@ public class FileController {
     /**
      * 文件下载
      *
-     * @param id 文件id
+     * @param id 附件id
      * @return ModelAndView视图
      */
     @RequestMapping(value = "/download")
     public ResponseEntity<byte[]> Download(@RequestParam("id") String id) {
-        Attachment attachment = attachmentDao.getAttachment(id);
+        Attachment attachment = attachmentDao.getAttachmentById(id);
         String filePath = attachment.getSavePath();
         File file = new File(filePath);
 

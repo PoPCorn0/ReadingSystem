@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.10
+ * @date 2019.05.21
  *
  * @Description
  */
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -117,9 +118,15 @@ public class TaskService {
         //从学生-任务表中删除属于该任务的记录
         taskDao.deleteReceiverByTaskIdAndTeamId(taskId);
 
-        //删除任务附件
-        attachmentDao.deleteAttachment(taskId);
-        // TODO 删除任务文件
+        //删除磁盘中任务附件并删除表中记录
+        Attachment attachment = attachmentDao.getAttachmentByRelyOnId(taskId);
+        if (attachment != null) {
+            File file = new File(attachment.getSavePath());
+            if (!file.delete()) {
+                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "文件删除失败");
+            }
+            attachmentDao.deleteAttachmentByRelyOnId(taskId);
+        }
 
         //删除可接受任务记录及任务
         return taskDao.deleteTask(taskId) == 1 ?

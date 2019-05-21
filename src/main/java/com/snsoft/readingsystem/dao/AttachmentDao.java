@@ -15,7 +15,6 @@ package com.snsoft.readingsystem.dao;
 import com.snsoft.readingsystem.pojo.Attachment;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -29,9 +28,13 @@ public interface AttachmentDao {
 
     // 根据id查询附件记录
     @Select("select id, rely_on_id, author_id, save_path, size, file_name from attachment where id = #{id}")
-    Attachment getAttachment(@Param("id") String id);
+    Attachment getAttachmentById(String id);
 
     // 删除附件记录
     @Delete("delete from attachment where id = #{id}")
-    void deleteAttachment(String id);
+    void deleteAttachmentByRelyOnId(String id);
+
+    // 根据附件依赖的任务或解读id查询附件记录
+    @Select("select id, rely_on_id, author_id, save_path, size, file_name from attachment where rely_on_id = #{id}")
+    Attachment getAttachmentByRelyOnId(String id);
 }
