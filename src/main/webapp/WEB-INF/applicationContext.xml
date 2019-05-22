@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ @copyright ：神农大学生软件创新中心 版权所有 © 2019
+  ~
+  ~ @author 16级信息与计算科学潘鹏程
+  ~
+  ~ @version
+  ~
+  ~ @date 2019.05.22
+  ~
+  ~ @Description
+  -->
+
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -15,35 +27,36 @@
     <!--引入属性文件，在配置中占位使用 -->
     <context:property-placeholder location="classpath*:db.properties"/>
 
-    <!--<bean id="availableFileSuffix" class="com.snsoft.readingsystem.utils.AvailableFileSuffixUtilUtil">-->
-        <!--<property name="suffix">-->
-            <!--<set>-->
-                <!--<value>zip</value>-->
-                <!--<value>rar</value>-->
-                <!--<value>7z</value>-->
-                <!--<value>jpg</value>-->
-                <!--<value>png</value>-->
-                <!--<value>gif</value>-->
-                <!--<value>raw</value>-->
-                <!--<value>jpeg</value>-->
-                <!--<value>bmp</value>-->
-                <!--<value>avi</value>-->
-                <!--<value>rmvb</value>-->
-                <!--<value>mp4</value>-->
-                <!--<value>wma</value>-->
-                <!--<value>wmv</value>-->
-                <!--<value>mkv</value>-->
-                <!--<value>flv</value>-->
-                <!--<value>doc</value>-->
-                <!--<value>docx</value>-->
-                <!--<value>xsl</value>-->
-                <!--<value>xsls</value>-->
-                <!--<value>ppt</value>-->
-                <!--<value>pptx</value>-->
-                <!--<value>xlsm</value>-->
-            <!--</set>-->
-        <!--</property>-->
-    <!--</bean>-->
+    <!-- 文件上传支持的后缀名set，用于自动装配 -->
+    <bean id="availableFileSuffix" class="com.snsoft.readingsystem.pojo.AvailableFileSuffix">
+        <property name="suffix">
+            <set>
+                <value>.zip</value>
+                <value>.rar</value>
+                <value>.7z</value>
+                <value>.jpg</value>
+                <value>.png</value>
+                <value>.gif</value>
+                <value>.raw</value>
+                <value>.jpeg</value>
+                <value>.bmp</value>
+                <value>.avi</value>
+                <value>.rmvb</value>
+                <value>.mp4</value>
+                <value>.wma</value>
+                <value>.wmv</value>
+                <value>.mkv</value>
+                <value>.flv</value>
+                <value>.doc</value>
+                <value>.docx</value>
+                <value>.xsl</value>
+                <value>.xsls</value>
+                <value>.ppt</value>
+                <value>.pptx</value>
+                <value>.xlsm</value>
+            </set>
+        </property>
+    </bean>
 
     <!--装配dataSource-->
     <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

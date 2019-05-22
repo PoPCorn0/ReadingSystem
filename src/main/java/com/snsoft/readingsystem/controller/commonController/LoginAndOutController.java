@@ -5,9 +5,9 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.05.22
  *
- * @Description 登录登出Controller
+ * @Description
  */
 
 package com.snsoft.readingsystem.controller.commonController;
@@ -15,13 +15,14 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.UserDao;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Teacher;
-import com.snsoft.readingsystem.returnPojo.PersonalInfo;
-import com.snsoft.readingsystem.service.UserService;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,8 +34,6 @@ import javax.annotation.Resource;
 @RequestMapping("/common")
 public class LoginAndOutController {
 
-    @Resource
-    UserService userService;
     @Resource
     UserDao userDao;
 

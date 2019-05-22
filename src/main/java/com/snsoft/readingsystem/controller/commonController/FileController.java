@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.21
+ * @date 2019.05.22
  *
  * @Description
  */
@@ -14,8 +14,8 @@ package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.*;
 import com.snsoft.readingsystem.pojo.Attachment;
+import com.snsoft.readingsystem.pojo.AvailableFileSuffix;
 import com.snsoft.readingsystem.utils.AllConstant;
-import com.snsoft.readingsystem.utils.AvailableFileSuffixUtil;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.User;
 import org.apache.commons.io.FileUtils;
@@ -53,6 +53,8 @@ public class FileController {
     AnswerDao answerDao;
     @Resource
     PendingAnswerDao pendingAnswerDao;
+    @Resource
+    AvailableFileSuffix availableFileSuffix;
 
     /**
      * 文件上传
@@ -114,7 +116,7 @@ public class FileController {
         String fileSuffix = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
 
         // 判断文件后缀名是否符合要求
-        if (!AvailableFileSuffixUtil.contains(fileSuffix)) {
+        if (!availableFileSuffix.contains(fileSuffix)) {
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "不支持的文件类型");
         }
 
