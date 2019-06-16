@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.13
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -14,9 +14,9 @@ package com.snsoft.readingsystem.service;
 
 import com.snsoft.readingsystem.dao.PendingAnswerDao;
 import com.snsoft.readingsystem.dao.ReceivedTaskDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.PendingAnswer;
 import com.snsoft.readingsystem.pojo.ReceivedTask;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,16 +43,16 @@ public class PendingAnswerService {
         ReceivedTask receivedTask = receivedTaskDao.getReceivedTaskByIdNotFinal(receivedTaskId);
 
         if (receivedTask == null || !receivedTask.getReceiverId().equals(pendingAnswer.getAuthorId())) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "未接受该任务");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "未接受该任务");
         }
 
         if (pendingAnswerDao.getPendingAnswerByReceivedTaskId(pendingAnswer.getReceivedTaskId()) != null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法重复提交");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法重复提交");
         }
 
         return pendingAnswerDao.addPendingAnswer(pendingAnswer) == 1 ?
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.FAIL);
     }
 
     /**
@@ -66,19 +66,19 @@ public class PendingAnswerService {
     public ModelAndView deletePendingAnswer(String userId, String pendingAnswerId) {
         PendingAnswer pendingAnswer = pendingAnswerDao.getPendingAnswerById(pendingAnswerId);
         if (pendingAnswer == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该待审核解读不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该待审核解读不存在");
         }
 
         if (!pendingAnswer.getAuthorId().equals(userId)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法删除不属于自己的待审核解读");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法删除不属于自己的待审核解读");
         }
 
         if (pendingAnswer.getCheckMark() != '0') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法删除已通过审核的解读");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法删除已通过审核的解读");
         }
 
         return pendingAnswerDao.deletePendingAnswer(pendingAnswerId) == 1 ?
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.FAIL);
     }
 }

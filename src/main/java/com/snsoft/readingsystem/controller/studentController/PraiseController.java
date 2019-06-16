@@ -5,17 +5,17 @@
  *
  * @version
  *
- * @date 2019.05.14
+ * @date 2019.06.16
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.controller.studentController;
 
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.service.PraiseService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller("Student_PraiseController")
+@Controller("StudentPraiseController")
 @RequestMapping("student")
 public class PraiseController {
 
@@ -46,7 +46,7 @@ public class PraiseController {
             return praiseService.praise(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

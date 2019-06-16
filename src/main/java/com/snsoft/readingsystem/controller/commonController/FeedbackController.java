@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,10 +13,10 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.FeedbackDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Feedback;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.UUID;
 
-@Controller("Common_FeedbackController")
+@Controller("CommonFeedbackController")
 @RequestMapping("/common")
 public class FeedbackController {
 
@@ -51,10 +51,10 @@ public class FeedbackController {
 
         try {
             return feedbackDao.addFeedback(feedback) == 1 ?
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                    ModelAndViewUtil.getModelAndView(Code.FAIL);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

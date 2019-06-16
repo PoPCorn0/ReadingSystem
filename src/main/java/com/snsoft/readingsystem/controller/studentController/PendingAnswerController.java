@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.13
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,13 +13,13 @@
 package com.snsoft.readingsystem.controller.studentController;
 
 import com.snsoft.readingsystem.dao.PendingAnswerDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.PendingAnswer;
 import com.snsoft.readingsystem.returnPojo.PendingAnswerInfo;
 import com.snsoft.readingsystem.service.PendingAnswerService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-@Controller("Student_AnswerController")
+@Controller("StudentAnswerController")
 @RequestMapping("/student")
 public class PendingAnswerController {
     @Resource
@@ -64,7 +64,7 @@ public class PendingAnswerController {
         try {
             return pendingAnswerService.commitAnswer(pendingAnswer);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -82,7 +82,7 @@ public class PendingAnswerController {
             return pendingAnswerService.deletePendingAnswer(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -101,7 +101,7 @@ public class PendingAnswerController {
         List<PendingAnswerInfo> approvedAnswers = pendingAnswerDao.getApprovedAnswers(user.getId(), rowBounds);
 
         if (approvedAnswers == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         return ModelAndViewUtil.getModelAndView("data", approvedAnswers);
@@ -122,7 +122,7 @@ public class PendingAnswerController {
         List<PendingAnswer> disapprovedAnswers = pendingAnswerDao.getDisapprovedAnswers(user.getId(), rowBounds);
 
         if (disapprovedAnswers == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         return ModelAndViewUtil.getModelAndView("data", disapprovedAnswers);

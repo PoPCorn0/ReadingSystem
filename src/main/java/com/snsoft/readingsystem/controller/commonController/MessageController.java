@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,10 +13,10 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.MessageDao;
-import com.snsoft.readingsystem.utils.AllConstant;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller("Common_MessageController")
+@Controller("CommonMessageController")
 @RequestMapping("/common")
 public class MessageController {
     @Resource
@@ -47,7 +47,7 @@ public class MessageController {
         try {
             return ModelAndViewUtil.getModelAndView("data", messageDao.getMessages(user.getId(), rowBounds));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -61,10 +61,10 @@ public class MessageController {
     public ModelAndView deleteMessage(@RequestParam("id") String id) {
         try {
             return messageDao.deleteMessage(id) == 1 ?
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "消息不存在");
+                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                    ModelAndViewUtil.getModelAndView(Code.FAIL, "消息不存在");
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.12
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,10 +13,10 @@
 package com.snsoft.readingsystem.controller.teacherController;
 
 import com.snsoft.readingsystem.dao.UserDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Message;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.service.MessageService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Controller("Teacher_MessageController")
+@Controller("TeacherMessageController")
 @RequestMapping("teacher")
 public class MessageController {
 
@@ -54,7 +54,7 @@ public class MessageController {
         ) {
             Student student = userDao.getStudentByIdNotRemoved(s);
             if (student == null) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "学生id：" + s + " 不存在");
+                return ModelAndViewUtil.getModelAndView(Code.FAIL, "学生id：" + s + " 不存在");
             }
 
             Message message = new Message();
@@ -67,7 +67,7 @@ public class MessageController {
         try {
             return messageService.sendMessage(messages);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

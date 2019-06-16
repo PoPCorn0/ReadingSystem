@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.21
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,11 +13,11 @@
 package com.snsoft.readingsystem.service;
 
 import com.snsoft.readingsystem.dao.*;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.pojo.TeamStu;
 import com.snsoft.readingsystem.returnPojo.StudentInfo;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,11 +53,11 @@ public class TeamService {
     public ModelAndView deleteTeam(String teacherId, String teamId) {
         Team team = teamDao.getTeamById(teamId);
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该团队不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
         }
 
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
         }
 
         teamDao.deleteTeamStuByTeamId(teamId);
@@ -69,8 +69,8 @@ public class TeamService {
 
         //删除团队
         return teamDao.deleteTeam(teamId) == 1 ?
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.FAIL);
     }
 
     /**
@@ -88,23 +88,23 @@ public class TeamService {
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该团队不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
         }
 
         //判断学生是否存在
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该学生不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
         }
 
         //判断该团队是否由该用户创建
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断学生是否在团队中
         TeamStu teamStu = teamDao.getTeamStuByTeamIdAndStudentId(teamId, studentId);
         if (teamStu != null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该学生已经在团队中");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生已经在团队中");
         }
 
         teamStu = teamDao.getRemovedTeamStu(teamId, studentId);
@@ -113,12 +113,12 @@ public class TeamService {
             taskDao.updateTaskByTeamIdAndStudentId(teamId, studentId, '0');
             receivedTaskDao.updateReceivedTaskByTeamIdAndStudentId(teamId, studentId, '0');
             return teamDao.updateTeamStu(teamId, studentId, '0') == 1 ?
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                    ModelAndViewUtil.getModelAndView(Code.FAIL);
         } else return teamDao.addSToTeam(teamId, studentId) == 1 ?
                 //将学生添加到团队中
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.FAIL);
     }
 
     /**
@@ -136,23 +136,23 @@ public class TeamService {
 
         //判断学生是否存在
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该学生不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
         }
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该团队不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
         }
 
         //判断该团队是否由该用户创建
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断学生是否在团队中
         TeamStu teamStu = teamDao.getTeamStuByTeamIdAndStudentId(teamId, studentId);
         if (teamStu == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该学生不在团队中");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不在团队中");
         }
 
         taskDao.updateTaskByTeamIdAndStudentId(teamId, studentId, '1');
@@ -168,8 +168,8 @@ public class TeamService {
 
         //从团队中移除该学生
         return teamDao.updateTeamStu(teamId, studentId, '1') == 1 ?
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.FAIL);
     }
 
     /**
@@ -181,14 +181,14 @@ public class TeamService {
     @Transactional
     public ModelAndView addTeam(Team team) {
         if (teamDao.addTeam(team) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         if (teamDao.addScoreStandard(team.getId()) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
     }
 
     /**
@@ -201,12 +201,12 @@ public class TeamService {
         Team team = teamDao.getTeamById(teamId);
 
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该团队不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
         }
 
         List<StudentInfo> students = teamDao.getStudentsByTeamId(teamId);
         if (students == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         String assistantId = team.getAssistantId();

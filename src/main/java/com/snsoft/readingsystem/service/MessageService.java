@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.12
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,8 +13,8 @@
 package com.snsoft.readingsystem.service;
 
 import com.snsoft.readingsystem.dao.MessageDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Message;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,7 @@ public class MessageService {
     @Transactional
     public ModelAndView sendMessage(ArrayList<Message> messages) {
         return messageDao.sendMessages(messages) == messages.size() ?
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.FAIL);
     }
 }

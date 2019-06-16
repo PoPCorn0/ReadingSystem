@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.19
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,10 +13,11 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.TaskDao;
-import com.snsoft.readingsystem.utils.AllConstant;
+import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.enums.Identity;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller("Common_TaskController")
+@Controller("CommonTaskController")
 @RequestMapping("/common")
 public class TaskController {
     @Resource
@@ -46,13 +47,13 @@ public class TaskController {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
 
         try {
-            if (user.getIdentityMark() == AllConstant.IDENTITYMARK_TEACHER) {
+            if (user.getIdentityMark() == Identity.TEACHER.getIdentity()) {
                 return ModelAndViewUtil.getModelAndView("data", taskDao.getTeacherTaskInfo(user.getId(), rowBounds));
             } else {
                 return ModelAndViewUtil.getModelAndView("data", taskDao.getStudentTaskInfo(user.getId(), rowBounds));
             }
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -67,7 +68,7 @@ public class TaskController {
         try {
             return ModelAndViewUtil.getModelAndView("data", taskDao.getTaskDetail(id));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

@@ -5,18 +5,18 @@
  *
  * @version
  *
- * @date 2019.05.10
+ * @date 2019.06.16
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.controller.teacherController;
 
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.service.StudentService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller("Teacher_StudentController")
+@Controller("TeacherStudentController")
 @RequestMapping("/teacher")
 public class StudentController {
 
@@ -56,7 +56,7 @@ public class StudentController {
         try {
             return studentService.addStudent(student);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -73,7 +73,7 @@ public class StudentController {
         try {
             return studentService.deleteStudent(user.getId(), id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.21
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -88,13 +88,13 @@ public interface TeamDao {
             "where student_id = #{studentId}" +
             ") " +
             "and is_remove = '0'")
-    List<Team> getTeamByStudentId(String studentId);
+    List<Team> getTeamsByStudentId(String studentId);
 
     // 查询导师创建的所有团队信息
     @Select("select id, name, teacher_id, assistant_id from team " +
             "where teacher_id = #{teacherId} " +
             "and is_remove = '0'")
-    List<Team> getTeamByTeacherId(String teacherId);
+    List<Team> getTeamsByTeacherId(String teacherId);
 
     // 根据团队id查询所有的学生
     @Select("select id, name, score from student " +

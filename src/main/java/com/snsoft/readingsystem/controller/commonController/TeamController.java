@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,14 +13,12 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.TeamDao;
-import com.snsoft.readingsystem.pojo.Student;
+import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.enums.Identity;
 import com.snsoft.readingsystem.pojo.Team;
-import com.snsoft.readingsystem.pojo.TeamStu;
-import com.snsoft.readingsystem.returnPojo.StudentInfo;
 import com.snsoft.readingsystem.service.TeamService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Controller("Common_TeamController")
+@Controller("CommonTeamController")
 @RequestMapping("/common")
 public class TeamController {
 
@@ -49,21 +47,21 @@ public class TeamController {
     @RequestMapping(value = "/getTeam", method = RequestMethod.GET)
     public ModelAndView getTeam(@SessionAttribute("user") User user) {
         try {
-            if (user.getIdentityMark() == AllConstant.IDENTITYMARK_STUDENT) {
-                List<Team> teams = teamDao.getTeamByStudentId(user.getId());
+            if (user.getIdentityMark() == Identity.STUDENT.getIdentity()) {
+                List<Team> teams = teamDao.getTeamsByStudentId(user.getId());
                 if (teams == null) {
-                    return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
                 }
                 return ModelAndViewUtil.getModelAndView("data", teams);
             } else {
-                List<Team> teams = teamDao.getTeamByTeacherId(user.getId());
+                List<Team> teams = teamDao.getTeamsByTeacherId(user.getId());
                 if (teams == null) {
-                    return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
                 }
                 return ModelAndViewUtil.getModelAndView("data", teams);
             }
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -78,7 +76,7 @@ public class TeamController {
         try {
             return teamService.getStudentsByTeamId(teamId);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

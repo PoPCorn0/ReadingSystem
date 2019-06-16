@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.08
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -15,11 +15,11 @@ package com.snsoft.readingsystem.service;
 import com.snsoft.readingsystem.dao.MessageDao;
 import com.snsoft.readingsystem.dao.TeamDao;
 import com.snsoft.readingsystem.dao.UserDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Message;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.pojo.TeamStu;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,23 +45,23 @@ public class AssistantService {
 
         //判断学生是否存在
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该学生不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
         }
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该团队不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
         }
 
         //判断团队是否由该用户创建
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断学生是否在该团队中
         TeamStu teamStu = teamDao.getTeamStuByTeamIdAndStudentId(studentId, teamId);
         if (teamStu == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该学生不在该团队中");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不在该团队中");
         }
 
         Message messageToOld = new Message();
@@ -91,8 +91,8 @@ public class AssistantService {
 
         //更新团队表
         return teamDao.updateAssistant(team) == 1 ?
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS) :
-                ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
+                ModelAndViewUtil.getModelAndView(Code.ERROR);
     }
 
 }

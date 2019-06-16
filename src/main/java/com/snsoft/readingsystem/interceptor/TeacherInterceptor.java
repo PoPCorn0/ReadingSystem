@@ -5,17 +5,19 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.06.16
  *
- * @Description 身份拦截器，至有导师身份放行
+ * @Description
  */
 
 package com.snsoft.readingsystem.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.snsoft.readingsystem.utils.AllConstant;
+import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.enums.Identity;
+import com.snsoft.readingsystem.enums.Msg;
 import com.snsoft.readingsystem.utils.InterceptorReturnData;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +28,10 @@ public class TeacherInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         response.setContentType("text/html;charset=utf-8");
         User user = (User) request.getSession().getAttribute("user");
-        if (user.getIdentityMark() != AllConstant.IDENTITYMARK_TEACHER) {
+        if (user.getIdentityMark() != Identity.TEACHER.getIdentity()) {
             InterceptorReturnData data = new InterceptorReturnData();
-            data.setCode(AllConstant.CODE_FAILED);
-            data.setMsg(AllConstant.MSG_PERMISSION_DENIED);
+            data.setCode(Code.FAIL.getCode());
+            data.setMsg(Msg.PERMISSION_DENIED.getMsg());
             response.getWriter().print(JSON.toJSONString(data));
             return false;
         } else

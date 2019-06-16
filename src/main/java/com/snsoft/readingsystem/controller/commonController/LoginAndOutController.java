@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.22
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,11 +13,12 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.UserDao;
+import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.enums.Identity;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Teacher;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller("Common_LoginAndOutController")
+@Controller("CommonLoginAndOutController")
 //该注解将类型为User的对象自动存入Session中
 @SessionAttributes(types = {User.class})
 @RequestMapping("/common")
@@ -51,24 +52,24 @@ public class LoginAndOutController {
             teacher = userDao.getTeacherById(id);
             student = userDao.getStudentByIdNotRemoved(id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
 
         User user = new User();
         if (teacher != null) {
             user.setId(teacher.getId());
             user.setPwd(teacher.getPwd());
-            user.setIdentityMark(AllConstant.IDENTITYMARK_TEACHER);
+            user.setIdentityMark(Identity.TEACHER.getIdentity());
         } else if (student != null) {
             user.setId(student.getId());
             user.setPwd(student.getPwd());
-            user.setIdentityMark(AllConstant.IDENTITYMARK_STUDENT);
+            user.setIdentityMark(Identity.STUDENT.getIdentity());
         } else {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "账号不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "账号不存在");
         }
 
         if (!user.getPwd().equals(pwd)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "密码错误");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "密码错误");
         }
 
         ModelAndView mv = ModelAndViewUtil.getModelAndView("user", user);

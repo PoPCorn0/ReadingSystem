@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.21
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,10 +13,13 @@
 package com.snsoft.readingsystem.service;
 
 import com.snsoft.readingsystem.dao.*;
+import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.enums.Identity;
+import com.snsoft.readingsystem.enums.Msg;
 import com.snsoft.readingsystem.pojo.*;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -59,26 +62,26 @@ public class CheckService {
         PendingTask pendingTask = pendingTaskDao.getPendingTaskById(pendingTaskId);
 
         if (pendingTask == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该任务不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该任务不存在");
         }
 
         // 如果当前用户不是导师则判断是不是要审核的任务所在团队的导师助手
         String teamId = pendingTask.getTeamId();
-        if (user.getIdentityMark() != AllConstant.IDENTITYMARK_TEACHER) {
+        if (user.getIdentityMark() != Identity.TEACHER.getIdentity()) {
             Team team = teamDao.getTeamById(teamId);
             if (!team.getAssistantId().equals(user.getId())) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, AllConstant.MSG_PERMISSION_DENIED);
+                return ModelAndViewUtil.getModelAndView(Code.FAIL, Msg.PERMISSION_DENIED.getMsg());
             }
         }
 
         // 如果当前是导师助手判断是否审核自己提交的任务
         if (pendingTask.getAuthorId().equals(user.getId())) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法审核自己提交的任务");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法审核自己提交的任务");
         }
 
         // 判断是否重复审核该任务
         if (pendingTask.getCheckMark() != '0') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "重复审核");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "重复审核");
         }
 
         // 如果可接受者列表中有任务提交者则将其移除
@@ -94,13 +97,13 @@ public class CheckService {
         task.setContent(pendingTask.getContent());
         task.setEndTime(endTime);
         task.setReceiver(receiver);
-        if (taskDao.publishTask(task) != 1) return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        if (taskDao.publishTask(task) != 1) return ModelAndViewUtil.getModelAndView(Code.FAIL);
 
         // 修改待审核任务表信息
         pendingTask.setCheckMark('1');
         pendingTask.setId(pendingTaskId);
         if (pendingTaskDao.updatePendingTask(pendingTask) != 1)
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
 
         // 为该任务添加可接受者到stu_task表中
         ArrayList<StuTask> stuTasks = new ArrayList<>();
@@ -110,21 +113,21 @@ public class CheckService {
             stuTask.setStudentId(s);
             stuTask.setTaskId(task.getId());
         }
-        if (taskDao.addReceiver(stuTasks) != 1) return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+        if (taskDao.addReceiver(stuTasks) != 1) return ModelAndViewUtil.getModelAndView(Code.FAIL);
 
         // 为任务提交者增加相应积分
         if (userDao.updateScore(task.getAuthorId(), task.getTeamId(), AllConstant.PUBLISH_TASK) != 1)
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         // 为任务提交者发送消息通知
         Message message = new Message();
         message.setId(UUID.randomUUID().toString());
         message.setTargetId(task.getAuthorId());
         message.setContent("您提交的任务：" + task.getTitle() + " 已通过");
         if (messageDao.sendMessage(message) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
     }
 
     /**
@@ -140,33 +143,33 @@ public class CheckService {
         PendingTask pendingTask = pendingTaskDao.getPendingTaskById(pendingTaskId);
 
         if (pendingTask == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "该任务不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该任务不存在");
         }
 
         // 如果当前用户不是导师则判断是不是要审核的任务所在团队的导师助手
         String teamId = pendingTask.getTeamId();
-        if (user.getIdentityMark() != AllConstant.IDENTITYMARK_TEACHER) {
+        if (user.getIdentityMark() != Identity.TEACHER.getIdentity()) {
             Team team = teamDao.getTeamById(teamId);
             if (!team.getAssistantId().equals(user.getId())) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, AllConstant.MSG_PERMISSION_DENIED);
+                return ModelAndViewUtil.getModelAndView(Code.FAIL, Msg.PERMISSION_DENIED.getMsg());
             }
         }
 
         // 如果当前是导师助手判断是否审核自己提交的任务
         if (pendingTask.getAuthorId().equals(user.getId())) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法审核自己提交的任务");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法审核自己提交的任务");
         }
 
         // 判断是否重复审核该任务
         if (pendingTask.getCheckMark() != '0') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "重复审核");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "重复审核");
         }
 
         // 修改待审核任务表信息
         pendingTask.setCheckMark('2');
         pendingTask.setReason(reason);
         if (pendingTaskDao.updatePendingTask(pendingTask) != 1)
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
 
         // 为任务提交者发送消息通知
         Message message = new Message();
@@ -175,9 +178,9 @@ public class CheckService {
                 reason);
         message.setTargetId(pendingTask.getAuthorId());
         if (messageDao.sendMessage(message) != 1)
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
 
-        return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
     }
 
     /**
@@ -192,27 +195,27 @@ public class CheckService {
         PendingAnswer pendingAnswer = pendingAnswerDao.getPendingAnswerById(pendingAnswerId);
 
         // 如果当前用户不是导师则判断是不是要审核的解读所在团队的导师助手
-        if (user.getIdentityMark() != AllConstant.IDENTITYMARK_TEACHER) {
+        if (user.getIdentityMark() != Identity.TEACHER.getIdentity()) {
             Team team = teamDao.getTeamByReceivedTaskId(pendingAnswer.getReceivedTaskId());
             if (team == null) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                return ModelAndViewUtil.getModelAndView(Code.FAIL);
             }
             if (!team.getAssistantId().equals(user.getId())) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, AllConstant.MSG_PERMISSION_DENIED);
+                return ModelAndViewUtil.getModelAndView(Code.FAIL, Msg.PERMISSION_DENIED.getMsg());
             }
         }
 
         if (pendingAnswer == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "待审核解读不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "待审核解读不存在");
         }
 
         if (pendingAnswer.getAuthorId().equals(user.getId())) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法审核自己提交的解读");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法审核自己提交的解读");
         }
 
         // 判断是否重复审核该任务
         if (pendingAnswer.getCheckMark() != '0') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "重复审核");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "重复审核");
         }
 
         // 添加一条解读&追加解读到answer表中
@@ -227,19 +230,19 @@ public class CheckService {
         answer.setReceivedTaskId(receivedTaskId);
         answer.setTaskId(task.getId());
         if (answerDao.addAnswer(answer) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         // 为解读提交者增加相应任务悬赏分
         if (userDao.addScore(answer.getAuthorId(), task.getReward()) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         // 更新待审核解读表中记录
         pendingAnswer.setId(pendingAnswerId);
         pendingAnswer.setCheckMark('1');
         if (pendingAnswerDao.checkAnswer(pendingAnswer) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         // 发送一条消息通知
@@ -248,10 +251,10 @@ public class CheckService {
         message.setTargetId(answer.getAuthorId());
         message.setContent("您提交的解读：" + answer.getTitle() + " 已通过审核");
         if (messageDao.sendMessage(message) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
     }
 
     /**
@@ -267,27 +270,27 @@ public class CheckService {
         PendingAnswer pendingAnswer = pendingAnswerDao.getPendingAnswerById(pendingAnswerId);
 
         // 如果当前用户不是导师则判断是不是要审核的解读所在团队的导师助手
-        if (user.getIdentityMark() != AllConstant.IDENTITYMARK_TEACHER) {
+        if (user.getIdentityMark() != Identity.TEACHER.getIdentity()) {
             Team team = teamDao.getTeamByReceivedTaskId(pendingAnswer.getReceivedTaskId());
             if (team == null) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+                return ModelAndViewUtil.getModelAndView(Code.FAIL);
             }
             if (!team.getAssistantId().equals(user.getId())) {
-                return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, AllConstant.MSG_PERMISSION_DENIED);
+                return ModelAndViewUtil.getModelAndView(Code.FAIL, Msg.PERMISSION_DENIED.getMsg());
             }
         }
 
         if (pendingAnswer == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "待审核解读不存在");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "待审核解读不存在");
         }
 
         if (pendingAnswer.getAuthorId().equals(user.getId())) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "无法审核自己提交的解读");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法审核自己提交的解读");
         }
 
         // 判断是否重复审核该任务
         if (pendingAnswer.getCheckMark() != '0') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "重复审核");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "重复审核");
         }
 
         // 更新追加解读表中记录
@@ -295,7 +298,7 @@ public class CheckService {
         pendingAnswer.setCheckMark('2');
         pendingAnswer.setReason(reason);
         if (pendingAnswerDao.checkAnswer(pendingAnswer) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
         // 发送一条消息通知
@@ -304,9 +307,9 @@ public class CheckService {
         message.setTargetId(pendingAnswer.getAuthorId());
         message.setContent("您提交的解读：" + pendingAnswer.getTitle() + " 未通过审核");
         if (messageDao.sendMessage(message) != 1) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED);
+            return ModelAndViewUtil.getModelAndView(Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView(AllConstant.CODE_SUCCESS);
+        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
     }
 }

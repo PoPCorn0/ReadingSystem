@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.15
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,10 +13,11 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.PendingAnswerDao;
-import com.snsoft.readingsystem.utils.AllConstant;
+import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.enums.Identity;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller("Common_PendingAnswerController")
+@Controller("CommonPendingAnswerController")
 @RequestMapping("/common")
 public class PendingAnswerController {
 
@@ -46,14 +47,14 @@ public class PendingAnswerController {
                                          @RequestParam(value = "page", required = false) Integer page) {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
         try {
-            if (user.getIdentityMark() == AllConstant.IDENTITYMARK_STUDENT)
+            if (user.getIdentityMark() == Identity.STUDENT.getIdentity())
                 return ModelAndViewUtil.getModelAndView("data",
                         pendingAnswerDao.getStudentPendingAnswerInfo(user.getId(), rowBounds));
             else
                 return ModelAndViewUtil.getModelAndView("data",
                         pendingAnswerDao.getTeacherPendingAnswerInfo(user.getId(), rowBounds));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

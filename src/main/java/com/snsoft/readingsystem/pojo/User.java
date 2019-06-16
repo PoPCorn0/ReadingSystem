@@ -5,12 +5,12 @@
  *
  * @version
  *
- * @date 2019.05.07
+ * @date 2019.06.16
  *
  * @Description
  */
 
-package com.snsoft.readingsystem.utils;
+package com.snsoft.readingsystem.pojo;
 
 import java.io.Serializable;
 

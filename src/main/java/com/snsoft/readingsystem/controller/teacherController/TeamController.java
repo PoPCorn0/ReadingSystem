@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.21
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -13,11 +13,11 @@
 package com.snsoft.readingsystem.controller.teacherController;
 
 import com.snsoft.readingsystem.dao.TeamDao;
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Team;
 import com.snsoft.readingsystem.service.TeamService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.UUID;
 
-@Controller("Teacher_TeamController")
+@Controller("TeacherTeamController")
 @RequestMapping("teacher")
 public class TeamController {
     @Resource
@@ -53,7 +53,7 @@ public class TeamController {
         try {
             return teamService.addTeam(team);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -69,7 +69,7 @@ public class TeamController {
             return teamService.deleteTeam(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -87,7 +87,7 @@ public class TeamController {
         try {
             return teamService.addStudentToTeam(teamId, studentId, user.getId());
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -105,7 +105,7 @@ public class TeamController {
         try {
             return teamService.removeStudentFromTeam(user.getId(), teamId, studentId);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }

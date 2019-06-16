@@ -5,17 +5,17 @@
  *
  * @version
  *
- * @date 2019.05.21
+ * @date 2019.06.16
  *
  * @Description
  */
 
 package com.snsoft.readingsystem.controller.commonController;
 
+import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.service.CheckService;
-import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.utils.User;
+import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Controller("Common_CheckController")
+@Controller("CommonCheckController")
 @RequestMapping("/common")
 public class CheckController {
     @Resource
@@ -55,9 +55,9 @@ public class CheckController {
         // 当审核通过时endTime, reward, receiver参数必需，不通过时reason参数必需
         if ((checkMark == '1' && (endTime == null || reward == null || receiver == null))
                 || (checkMark == '2' && reason == null)) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "缺少参数");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "缺少参数");
         } else if (checkMark != '1' && checkMark != '2') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "审核标记异常");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "审核标记异常");
         }
 
         try {
@@ -66,7 +66,7 @@ public class CheckController {
             else
                 return checkService.checkTask(user, id, reason);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 
@@ -85,9 +85,9 @@ public class CheckController {
                                     @RequestParam("checkMark") Character checkMark,
                                     @RequestParam(value = "reason", required = false) String reason) {
         if (checkMark == '2' && reason == null) {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "参数异常");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "参数异常");
         } else if (checkMark != '1' && checkMark != '2') {
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_FAILED, "审核标记异常");
+            return ModelAndViewUtil.getModelAndView(Code.FAIL, "审核标记异常");
         }
 
         try {
@@ -97,7 +97,7 @@ public class CheckController {
                 return checkService.checkAnswer(user, id, reason);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
+            return ModelAndViewUtil.getModelAndView(Code.ERROR);
         }
     }
 }
