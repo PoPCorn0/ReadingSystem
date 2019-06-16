@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.05.19
+ * @date 2019.06.16
  *
  * @Description
  */
@@ -75,7 +75,6 @@ public class AnswerController {
         try {
             return answerService.getAnswerDetail(user, id);
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ModelAndViewUtil.getModelAndView(AllConstant.CODE_ERROR);
         }
     }
