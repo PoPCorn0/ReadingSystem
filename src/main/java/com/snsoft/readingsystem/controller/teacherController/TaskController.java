@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -14,9 +14,9 @@ package com.snsoft.readingsystem.controller.teacherController;
 
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Task;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.TaskService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +30,8 @@ import java.util.UUID;
 public class TaskController {
     @Resource
     TaskService taskService;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 发布任务
@@ -63,7 +65,7 @@ public class TaskController {
         try {
             return taskService.publishTask(task);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -80,7 +82,7 @@ public class TaskController {
             return taskService.deleteTask(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

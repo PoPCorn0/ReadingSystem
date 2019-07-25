@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -13,9 +13,9 @@
 package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.UserService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +30,8 @@ import javax.annotation.Resource;
 public class UserController {
     @Resource
     UserService userService;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 获取个人信息，等待个人的信息完善后将返回更多数据
@@ -42,7 +44,7 @@ public class UserController {
         try {
             return userService.getPersonalInfo(studentId);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -61,7 +63,7 @@ public class UserController {
         try {
             return userService.resetPwd(user, oldPwd, newPwd);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,9 +15,9 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.PendingAnswerDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +34,8 @@ public class PendingAnswerController {
 
     @Resource
     PendingAnswerDao pendingAnswerDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 如果当前用户是学生则返回其提交的所有尚未审核的解读，如果是导师则返回其创建的所有团队尚未审核的解读
@@ -48,13 +50,13 @@ public class PendingAnswerController {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
         try {
             if (user.getIdentityMark() == Identity.STUDENT.getIdentity())
-                return ModelAndViewUtil.getModelAndView("data",
+                return ModelAndViewUtil.addObject(mv, "data",
                         pendingAnswerDao.getStudentPendingAnswerInfo(user.getId(), rowBounds));
             else
-                return ModelAndViewUtil.getModelAndView("data",
+                return ModelAndViewUtil.addObject(mv, "data",
                         pendingAnswerDao.getTeacherPendingAnswerInfo(user.getId(), rowBounds));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -14,9 +14,9 @@ package com.snsoft.readingsystem.controller.teacherController;
 
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Student;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.StudentService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +32,8 @@ public class StudentController {
 
     @Resource
     StudentService studentService;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 添加一个学生
@@ -56,7 +58,7 @@ public class StudentController {
         try {
             return studentService.addStudent(student);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -73,7 +75,7 @@ public class StudentController {
         try {
             return studentService.deleteStudent(user.getId(), id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

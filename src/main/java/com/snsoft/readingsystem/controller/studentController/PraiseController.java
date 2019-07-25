@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -13,9 +13,9 @@
 package com.snsoft.readingsystem.controller.studentController;
 
 import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.PraiseService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +31,8 @@ public class PraiseController {
 
     @Resource
     PraiseService praiseService;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 点赞
@@ -45,8 +47,7 @@ public class PraiseController {
         try {
             return praiseService.praise(user.getId(), id);
         } catch (RuntimeException e) {
-            e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -14,9 +14,9 @@ package com.snsoft.readingsystem.controller.commonController;
 
 import com.snsoft.readingsystem.dao.MessageDao;
 import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +32,8 @@ import javax.annotation.Resource;
 public class MessageController {
     @Resource
     MessageDao messageDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 获取所有消息通知
@@ -45,9 +47,9 @@ public class MessageController {
                                    @RequestParam(value = "page", required = false) Integer page) {
         RowBounds rowBounds = PageUtil.getRowBounds(page);
         try {
-            return ModelAndViewUtil.getModelAndView("data", messageDao.getMessages(user.getId(), rowBounds));
+            return ModelAndViewUtil.addObject(mv, "data", messageDao.getMessages(user.getId(), rowBounds));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -61,10 +63,10 @@ public class MessageController {
     public ModelAndView deleteMessage(@RequestParam("id") String id) {
         try {
             return messageDao.deleteMessage(id) == 1 ?
-                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(Code.FAIL, "消息不存在");
+                    ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                    ModelAndViewUtil.addObject(mv, Code.FAIL, "消息不存在");
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

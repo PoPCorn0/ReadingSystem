@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,10 +15,10 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.AnswerDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.AnswerService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +37,8 @@ public class AnswerController {
     AnswerDao answerDao;
     @Resource
     AnswerService answerService;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 如果当前是导师账号则返回其创建的所有团队的解读，如果是学生账号则返回其所在的所有团队的解读
@@ -52,14 +54,14 @@ public class AnswerController {
 
         try {
             if (user.getIdentityMark() == Identity.TEACHER.getIdentity())
-                return ModelAndViewUtil.getModelAndView("data",
+                return ModelAndViewUtil.addObject(mv, "data",
                         answerDao.getTeacherAnswerInfo(user.getId(), rowBounds));
             else {
-                return ModelAndViewUtil.getModelAndView("data",
+                return ModelAndViewUtil.addObject(mv, "data",
                         answerDao.getStudentAnswerInfo(user.getId(), rowBounds));
             }
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -76,7 +78,7 @@ public class AnswerController {
         try {
             return answerService.getAnswerDetail(user, id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -38,6 +38,8 @@ public class MessageController {
     MessageService messageService;
     @Resource
     UserDao userDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 导师向学生批量发送消息通知
@@ -54,7 +56,7 @@ public class MessageController {
         ) {
             Student student = userDao.getStudentByIdNotRemoved(s);
             if (student == null) {
-                return ModelAndViewUtil.getModelAndView(Code.FAIL, "学生id：" + s + " 不存在");
+                return ModelAndViewUtil.addObject(mv, Code.FAIL, "学生id：" + s + " 不存在");
             }
 
             Message message = new Message();
@@ -67,7 +69,7 @@ public class MessageController {
         try {
             return messageService.sendMessage(messages);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -27,6 +27,8 @@ import java.util.ArrayList;
 public class MessageService {
     @Resource
     MessageDao messageDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 向一个或多个学生发送消息通知
@@ -37,7 +39,7 @@ public class MessageService {
     @Transactional
     public ModelAndView sendMessage(ArrayList<Message> messages) {
         return messageDao.sendMessages(messages) == messages.size() ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,45 +15,39 @@ package com.snsoft.readingsystem.utils;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Msg;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 public class ModelAndViewUtil {
-    public static ModelAndView getModelAndView(Code code) {
-        ModelAndView mv = new ModelAndView();
-        mv.setView(new MappingJackson2JsonView());
+
+    public static ModelAndView addObject(ModelAndView mv, Code code) {
         if (code == Code.SUCCESS) {
-            mv.addObject("code", Code.SUCCESS);
+            mv.addObject("code", Code.SUCCESS.getCode());
             mv.addObject("msg", Msg.SUCCESS.getMsg());
         } else if (code == Code.FAIL) {
-            mv.addObject("code", Code.FAIL);
+            mv.addObject("code", Code.FAIL.getCode());
             mv.addObject("msg", Msg.FAIL.getMsg());
         } else if (code == Code.ERROR) {
-            mv.addObject("code", Code.ERROR);
+            mv.addObject("code", Code.ERROR.getCode());
             mv.addObject("msg", Msg.ERROR.getMsg());
         }
         return mv;
     }
 
-    public static ModelAndView getModelAndView(String dataName, Object data) {
-        ModelAndView mv = new ModelAndView();
-        mv.setView(new MappingJackson2JsonView());
-        mv.addObject("code", Code.SUCCESS);
+    public static ModelAndView addObject(ModelAndView mv, String dataName, Object data) {
+        mv.addObject("code", Code.SUCCESS.getCode());
         mv.addObject("msg", Msg.SUCCESS.getMsg());
         mv.addObject(dataName, data);
         return mv;
     }
 
-    public static ModelAndView getModelAndView(Code code, String msg) {
-        ModelAndView mv = new ModelAndView();
-        mv.setView(new MappingJackson2JsonView());
+    public static ModelAndView addObject(ModelAndView mv, Code code, String msg) {
         if (code == Code.SUCCESS) {
-            mv.addObject("code", Code.SUCCESS);
+            mv.addObject("code", Code.SUCCESS.getCode());
             mv.addObject("msg", msg);
         } else if (code == Code.FAIL) {
-            mv.addObject("code", Code.FAIL);
+            mv.addObject("code", Code.FAIL.getCode());
             mv.addObject("msg", msg);
         } else if (code == Code.ERROR) {
-            mv.addObject("code", Code.ERROR);
+            mv.addObject("code", Code.ERROR.getCode());
             mv.addObject("msg", msg);
         }
         return mv;

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -37,6 +37,8 @@ public class AssistantService {
     TeamDao teamDao;
     @Resource
     MessageDao messageDao;
+    @Resource
+    ModelAndView mv;
 
     @Transactional
     public ModelAndView setAssistant(String teacherId, String studentId, String teamId) {
@@ -45,23 +47,23 @@ public class AssistantService {
 
         //判断学生是否存在
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生不存在");
         }
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该团队不存在");
         }
 
         //判断团队是否由该用户创建
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断学生是否在该团队中
         TeamStu teamStu = teamDao.getTeamStuByTeamIdAndStudentId(studentId, teamId);
         if (teamStu == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不在该团队中");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生不在该团队中");
         }
 
         Message messageToOld = new Message();
@@ -91,8 +93,8 @@ public class AssistantService {
 
         //更新团队表
         return teamDao.updateAssistant(team) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.ERROR);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.ERROR);
     }
 
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -32,6 +32,8 @@ public class StudentService {
     UserDao userDao;
     @Resource
     TeamDao teamDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 添加一个学生
@@ -44,18 +46,18 @@ public class StudentService {
         Student studentById = userDao.getStudentById(student.getId());
         //判断该id是否已经存在
         if (studentById != null && studentById.getIsRemoved() != '1') {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该ID已存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该ID已存在");
         } else if (studentById == null) {
             //添加学生
             return userDao.addStudent(student) == 1 ?
-                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                    ModelAndViewUtil.addObject(mv, Code.FAIL);
         } else {
             //如果输入的是已移除的学生id，则将移除标记设为否
             student.setIsRemoved('0');
             return userDao.updateStudent(student) == 1 ?
-                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                    ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
     }
 
@@ -70,19 +72,19 @@ public class StudentService {
     public ModelAndView deleteStudent(String teacherId, String studentId) {
         Student student = userDao.getStudentByIdNotRemoved(studentId);
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生不存在");
         }
 
         List<TeamStu> teamStuList = teamDao.getTeamStuByStudentId(studentId);
         for (TeamStu e : teamStuList) {
             Team team = teamDao.getTeamById(e.getTeamId());
             if (!team.getTeacherId().equals(teacherId)) {
-                return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生还属于其他团队，无法移除");
+                return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生还属于其他团队，无法移除");
             }
         }
 
         return userDao.removeStudent(studentId) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 }

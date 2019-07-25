@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -42,6 +42,8 @@ public class TaskService {
     AttachmentDao attachmentDao;
     @Resource
     PendingAnswerDao pendingAnswerDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 发布任务
@@ -55,17 +57,17 @@ public class TaskService {
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该团队不存在");
         }
 
         //判断该团队是否由该用户创建
         if (!team.getTeacherId().equals(task.getAuthorId())) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //添加到任务表
         if (taskDao.publishTask(task) != 1) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         List<String> receiver = task.getReceiver();
@@ -73,7 +75,7 @@ public class TaskService {
         for (String s : receiver) {
             Student student = userDao.getStudentByIdNotRemoved(s);
             if (student == null) {
-                return ModelAndViewUtil.getModelAndView(Code.FAIL, "学生id：" + s + "不存在");
+                return ModelAndViewUtil.addObject(mv, Code.FAIL, "学生id：" + s + "不存在");
             }
 
             StuTask stuTask = new StuTask();
@@ -83,8 +85,8 @@ public class TaskService {
         }
 
         //添加可接受者
-        return taskDao.addReceiver(stuTaskList) >= 1 ? ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+        return taskDao.addReceiver(stuTaskList) >= 1 ? ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     /**
@@ -99,20 +101,20 @@ public class TaskService {
         Task task = taskDao.getAcceptableTaskById(taskId);
         //判断该任务是否存在
         if (task == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该任务不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该任务不存在");
         }
 
         //判断是否是属于自己团队的任务
         String teamId = task.getTeamId();
         Team team = teamDao.getTeamById(teamId);
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断该任务是否已经有人接受
         List<ReceivedTask> receivedTasks = receivedTaskDao.getReceivedTasksByTaskIdNotFinal(taskId);
         if (receivedTasks != null && receivedTasks.size() != 0) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法删除已被接受的任务");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法删除已被接受的任务");
         }
 
         //从学生-任务表中删除属于该任务的记录
@@ -123,32 +125,32 @@ public class TaskService {
         if (attachment != null) {
             File file = new File(attachment.getSavePath());
             if (!file.delete()) {
-                return ModelAndViewUtil.getModelAndView(Code.FAIL, "文件删除失败");
+                return ModelAndViewUtil.addObject(mv, Code.FAIL, "文件删除失败");
             }
             attachmentDao.deleteAttachmentByRelyOnId(taskId);
         }
 
         //删除可接受任务记录及任务
         return taskDao.deleteTask(taskId) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     public ModelAndView receiveTask(String userId, String taskId) {
         Task acceptableTask = taskDao.getAcceptableTaskById(taskId);
 
         if (acceptableTask == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该任务不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该任务不存在");
         }
 
         StuTask stuTask = taskDao.getStuTaskByTaskIdAndStudentId(taskId, userId);
         if (stuTask == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法接受该任务");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法接受该任务");
         }
 
         ReceivedTask receivedTask = receivedTaskDao.getReceivedTaskByStudentIdAndTaskId(taskId, userId);
         if (receivedTask != null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "重复接受任务");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "重复接受任务");
         }
 
         receivedTask = new ReceivedTask();
@@ -157,8 +159,8 @@ public class TaskService {
         receivedTask.setTaskId(taskId);
 
         return receivedTaskDao.addReceivedTask(receivedTask) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     /**
@@ -174,7 +176,7 @@ public class TaskService {
         List<AcceptedTaskInfo> acceptedTaskInfos = taskDao.getAcceptedTasksInfoByStudentId(userId, rowBounds);
 
         if (acceptedTaskInfos == null || acceptedTaskInfos.size() == 0) {
-            return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
+            return ModelAndViewUtil.addObject(mv, Code.SUCCESS);
         } else {
             // 为每个AcceptedTaskInfo添加提交解读时间、审核标记（如果提交过解读）
             PendingAnswer pendingAnswer;
@@ -188,7 +190,7 @@ public class TaskService {
             }
         }
 
-        return ModelAndViewUtil.getModelAndView("data", acceptedTaskInfos);
+        return ModelAndViewUtil.addObject(mv, "data", acceptedTaskInfos);
     }
 
     /**
@@ -205,12 +207,12 @@ public class TaskService {
 
         // 判断该已接受任务是否存在和是否属于该用户
         if (receivedTask == null || !receivedTask.getReceiverId().equals(userId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "未接受该任务");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "未接受该任务");
         }
 
         // 删除已接受任务
         return receivedTaskDao.deleteReceivedTaskByStudentIdAndReceivedTaskId(receivedTaskId) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 }

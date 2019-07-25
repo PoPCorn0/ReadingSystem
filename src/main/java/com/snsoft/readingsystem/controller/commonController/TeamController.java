@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -16,9 +16,9 @@ import com.snsoft.readingsystem.dao.TeamDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
 import com.snsoft.readingsystem.pojo.Team;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.TeamService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +37,8 @@ public class TeamController {
     TeamService teamService;
     @Resource
     TeamDao teamDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 当前用户是学生时返回学生所在的所有团队信息，为导师时返回导师创建的所有团队信息
@@ -50,18 +52,18 @@ public class TeamController {
             if (user.getIdentityMark() == Identity.STUDENT.getIdentity()) {
                 List<Team> teams = teamDao.getTeamsByStudentId(user.getId());
                 if (teams == null) {
-                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    return ModelAndViewUtil.addObject(mv, Code.FAIL);
                 }
-                return ModelAndViewUtil.getModelAndView("data", teams);
+                return ModelAndViewUtil.addObject(mv, "data", teams);
             } else {
                 List<Team> teams = teamDao.getTeamsByTeacherId(user.getId());
                 if (teams == null) {
-                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    return ModelAndViewUtil.addObject(mv, Code.FAIL);
                 }
-                return ModelAndViewUtil.getModelAndView("data", teams);
+                return ModelAndViewUtil.addObject(mv, "data", teams);
             }
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -76,7 +78,7 @@ public class TeamController {
         try {
             return teamService.getStudentsByTeamId(teamId);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

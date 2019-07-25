@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,9 +15,9 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.TaskDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +33,8 @@ import javax.annotation.Resource;
 public class TaskController {
     @Resource
     TaskDao taskDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 如果当前是导师账号则获取其创建的所有团队的已发布任务，如果是学生账号则获取其所有可以接受的已发布任务
@@ -48,12 +50,12 @@ public class TaskController {
 
         try {
             if (user.getIdentityMark() == Identity.TEACHER.getIdentity()) {
-                return ModelAndViewUtil.getModelAndView("data", taskDao.getTeacherTaskInfo(user.getId(), rowBounds));
+                return ModelAndViewUtil.addObject(mv, "data", taskDao.getTeacherTaskInfo(user.getId(), rowBounds));
             } else {
-                return ModelAndViewUtil.getModelAndView("data", taskDao.getStudentTaskInfo(user.getId(), rowBounds));
+                return ModelAndViewUtil.addObject(mv, "data", taskDao.getStudentTaskInfo(user.getId(), rowBounds));
             }
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -66,9 +68,9 @@ public class TaskController {
     @RequestMapping(value = "/getTaskDetail", method = RequestMethod.GET)
     public ModelAndView getTaskDetail(@RequestParam("id") String id) {
         try {
-            return ModelAndViewUtil.getModelAndView("data", taskDao.getTaskDetail(id));
+            return ModelAndViewUtil.addObject(mv, "data", taskDao.getTaskDetail(id));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

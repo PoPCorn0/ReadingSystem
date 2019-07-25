@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -17,8 +17,8 @@ import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
 import com.snsoft.readingsystem.pojo.Student;
 import com.snsoft.readingsystem.pojo.Teacher;
-import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.pojo.User;
+import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +37,8 @@ public class LoginAndOutController {
 
     @Resource
     UserDao userDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 登录处理
@@ -52,7 +54,7 @@ public class LoginAndOutController {
             teacher = userDao.getTeacherById(id);
             student = userDao.getStudentByIdNotRemoved(id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(this.mv, Code.ERROR);
         }
 
         User user = new User();
@@ -65,14 +67,15 @@ public class LoginAndOutController {
             user.setPwd(student.getPwd());
             user.setIdentityMark(Identity.STUDENT.getIdentity());
         } else {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "账号不存在");
+            return ModelAndViewUtil.addObject(this.mv, Code.FAIL, "账号不存在");
         }
 
         if (!user.getPwd().equals(pwd)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "密码错误");
+            return ModelAndViewUtil.addObject(this.mv, Code.FAIL, "密码错误");
         }
 
-        ModelAndView mv = ModelAndViewUtil.getModelAndView("user", user);
+        ModelAndView mv = ModelAndViewUtil.addObject(this.mv, Code.SUCCESS);
+        mv.addObject("user", user);
         mv.addObject("identity", user.getIdentityMark());
         return mv;
     }

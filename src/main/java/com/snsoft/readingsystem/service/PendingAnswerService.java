@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -30,6 +30,8 @@ public class PendingAnswerService {
     ReceivedTaskDao receivedTaskDao;
     @Resource
     PendingAnswerDao pendingAnswerDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 添加待审核解读
@@ -43,16 +45,16 @@ public class PendingAnswerService {
         ReceivedTask receivedTask = receivedTaskDao.getReceivedTaskByIdNotFinal(receivedTaskId);
 
         if (receivedTask == null || !receivedTask.getReceiverId().equals(pendingAnswer.getAuthorId())) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "未接受该任务");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "未接受该任务");
         }
 
         if (pendingAnswerDao.getPendingAnswerByReceivedTaskId(pendingAnswer.getReceivedTaskId()) != null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法重复提交");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法重复提交");
         }
 
         return pendingAnswerDao.addPendingAnswer(pendingAnswer) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     /**
@@ -66,19 +68,19 @@ public class PendingAnswerService {
     public ModelAndView deletePendingAnswer(String userId, String pendingAnswerId) {
         PendingAnswer pendingAnswer = pendingAnswerDao.getPendingAnswerById(pendingAnswerId);
         if (pendingAnswer == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该待审核解读不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该待审核解读不存在");
         }
 
         if (!pendingAnswer.getAuthorId().equals(userId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法删除不属于自己的待审核解读");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法删除不属于自己的待审核解读");
         }
 
         if (pendingAnswer.getCheckMark() != '0') {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法删除已通过审核的解读");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法删除已通过审核的解读");
         }
 
         return pendingAnswerDao.deletePendingAnswer(pendingAnswerId) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 }

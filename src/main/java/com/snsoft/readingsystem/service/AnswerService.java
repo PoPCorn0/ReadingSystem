@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,14 +15,10 @@ package com.snsoft.readingsystem.service;
 import com.snsoft.readingsystem.dao.*;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
-import com.snsoft.readingsystem.pojo.Answer;
-import com.snsoft.readingsystem.pojo.Attachment;
-import com.snsoft.readingsystem.pojo.PayRecord;
-import com.snsoft.readingsystem.pojo.Task;
+import com.snsoft.readingsystem.pojo.*;
 import com.snsoft.readingsystem.returnPojo.AnswerDetailInfo;
 import com.snsoft.readingsystem.utils.AllConstant;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,19 +38,21 @@ public class AnswerService {
     RecordDao recordDao;
     @Resource
     UserDao userDao;
+    @Resource
+    ModelAndView mv;
 
     @Transactional
     public ModelAndView getAnswerDetail(User user, String id) {
         // 判断传入的解读id是否存在
         Answer answer = answerDao.getAnswerById(id);
         if (answer == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "解读不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "解读不存在");
         }
 
         // 判断解读对应的任务信息是否存在
         Task task = taskDao.getTaskById(answer.getTaskId());
         if (task == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         // 为返回信息对象添加和任务有关的信息
@@ -88,6 +86,6 @@ public class AnswerService {
             answerDetailInfo.setAnswers(answerDao.getAnswerInfosByReceivedTaskId(answer.getReceivedTaskId()));
         }
 
-        return ModelAndViewUtil.getModelAndView("data", answerDetailInfo);
+        return ModelAndViewUtil.addObject(mv, "data", answerDetailInfo);
     }
 }

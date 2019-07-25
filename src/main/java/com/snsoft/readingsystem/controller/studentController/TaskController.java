@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -13,10 +13,10 @@
 package com.snsoft.readingsystem.controller.studentController;
 
 import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.TaskService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +31,8 @@ import javax.annotation.Resource;
 public class TaskController {
     @Resource
     TaskService taskService;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 接受任务
@@ -46,7 +48,7 @@ public class TaskController {
             return taskService.receiveTask(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -63,7 +65,7 @@ public class TaskController {
         try {
             return taskService.getAcceptedTasksNotFinal(user.getId(), PageUtil.getRowBounds(page));
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -80,7 +82,7 @@ public class TaskController {
         try {
             return taskService.deleteAcceptedTask(user.getId(), id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

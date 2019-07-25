@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -40,7 +40,8 @@ public class TeamService {
     PendingAnswerDao pendingAnswerDao;
     @Resource
     PendingTaskDao pendingTaskDao;
-
+    @Resource
+    ModelAndView mv;
 
     /**
      * 删除团队，不可恢复
@@ -53,11 +54,11 @@ public class TeamService {
     public ModelAndView deleteTeam(String teacherId, String teamId) {
         Team team = teamDao.getTeamById(teamId);
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该团队不存在");
         }
 
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法操作不属于自己的团队");
         }
 
         teamDao.deleteTeamStuByTeamId(teamId);
@@ -69,8 +70,8 @@ public class TeamService {
 
         //删除团队
         return teamDao.deleteTeam(teamId) == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     /**
@@ -88,23 +89,23 @@ public class TeamService {
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该团队不存在");
         }
 
         //判断学生是否存在
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生不存在");
         }
 
         //判断该团队是否由该用户创建
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断学生是否在团队中
         TeamStu teamStu = teamDao.getTeamStuByTeamIdAndStudentId(teamId, studentId);
         if (teamStu != null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生已经在团队中");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生已经在团队中");
         }
 
         teamStu = teamDao.getRemovedTeamStu(teamId, studentId);
@@ -113,12 +114,12 @@ public class TeamService {
             taskDao.updateTaskByTeamIdAndStudentId(teamId, studentId, '0');
             receivedTaskDao.updateReceivedTaskByTeamIdAndStudentId(teamId, studentId, '0');
             return teamDao.updateTeamStu(teamId, studentId, '0') == 1 ?
-                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                    ModelAndViewUtil.addObject(mv, Code.FAIL);
         } else return teamDao.addSToTeam(teamId, studentId) == 1 ?
                 //将学生添加到团队中
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     /**
@@ -136,23 +137,23 @@ public class TeamService {
 
         //判断学生是否存在
         if (student == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生不存在");
         }
 
         //判断团队是否存在
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该团队不存在");
         }
 
         //判断该团队是否由该用户创建
         if (!team.getTeacherId().equals(teacherId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法操作不属于自己的团队");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法操作不属于自己的团队");
         }
 
         //判断学生是否在团队中
         TeamStu teamStu = teamDao.getTeamStuByTeamIdAndStudentId(teamId, studentId);
         if (teamStu == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该学生不在团队中");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该学生不在团队中");
         }
 
         taskDao.updateTaskByTeamIdAndStudentId(teamId, studentId, '1');
@@ -168,8 +169,8 @@ public class TeamService {
 
         //从团队中移除该学生
         return teamDao.updateTeamStu(teamId, studentId, '1') == 1 ?
-                ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                ModelAndViewUtil.getModelAndView(Code.FAIL);
+                ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                ModelAndViewUtil.addObject(mv, Code.FAIL);
     }
 
     /**
@@ -181,14 +182,14 @@ public class TeamService {
     @Transactional
     public ModelAndView addTeam(Team team) {
         if (teamDao.addTeam(team) != 1) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         if (teamDao.addScoreStandard(team.getId()) != 1) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
+        return ModelAndViewUtil.addObject(mv, Code.SUCCESS);
     }
 
     /**
@@ -201,12 +202,12 @@ public class TeamService {
         Team team = teamDao.getTeamById(teamId);
 
         if (team == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "该团队不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "该团队不存在");
         }
 
         List<StudentInfo> students = teamDao.getStudentsByTeamId(teamId);
         if (students == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         String assistantId = team.getAssistantId();
@@ -218,6 +219,6 @@ public class TeamService {
             } else student.setIsAssistant('0');
         }
 
-        return ModelAndViewUtil.getModelAndView("data", students);
+        return ModelAndViewUtil.addObject(mv, "data", students);
     }
 }

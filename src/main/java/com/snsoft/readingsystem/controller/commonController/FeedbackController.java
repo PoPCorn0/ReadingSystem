@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,8 +15,8 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.FeedbackDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Feedback;
-import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.pojo.User;
+import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +33,8 @@ public class FeedbackController {
 
     @Resource
     FeedbackDao feedbackDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 添加反馈
@@ -51,10 +53,10 @@ public class FeedbackController {
 
         try {
             return feedbackDao.addFeedback(feedback) == 1 ?
-                    ModelAndViewUtil.getModelAndView(Code.SUCCESS) :
-                    ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    ModelAndViewUtil.addObject(mv, Code.SUCCESS) :
+                    ModelAndViewUtil.addObject(mv, Code.FAIL);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

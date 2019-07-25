@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -13,9 +13,9 @@
 package com.snsoft.readingsystem.controller.teacherController;
 
 import com.snsoft.readingsystem.enums.Code;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.AssistantService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,7 +30,8 @@ import javax.annotation.Resource;
 public class AssistantController {
     @Resource
     AssistantService assistantService;
-
+    @Resource
+    ModelAndView mv;
     /**
      * 设置导师助手，如果传入的id已经是导师助手则取消
      *
@@ -46,7 +47,7 @@ public class AssistantController {
         try {
             return assistantService.setAssistant(user.getId(), studentId, teamId);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

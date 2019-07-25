@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,11 +15,11 @@ package com.snsoft.readingsystem.controller.studentController;
 import com.snsoft.readingsystem.dao.PendingAnswerDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.PendingAnswer;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.returnPojo.PendingAnswerInfo;
 import com.snsoft.readingsystem.service.PendingAnswerService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +39,8 @@ public class PendingAnswerController {
     PendingAnswerService pendingAnswerService;
     @Resource
     PendingAnswerDao pendingAnswerDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 提交待审核解读
@@ -64,7 +66,7 @@ public class PendingAnswerController {
         try {
             return pendingAnswerService.commitAnswer(pendingAnswer);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -82,7 +84,7 @@ public class PendingAnswerController {
             return pendingAnswerService.deletePendingAnswer(user.getId(), id);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -101,10 +103,10 @@ public class PendingAnswerController {
         List<PendingAnswerInfo> approvedAnswers = pendingAnswerDao.getApprovedAnswers(user.getId(), rowBounds);
 
         if (approvedAnswers == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView("data", approvedAnswers);
+        return ModelAndViewUtil.addObject(mv, "data", approvedAnswers);
     }
 
     /**
@@ -122,9 +124,9 @@ public class PendingAnswerController {
         List<PendingAnswer> disapprovedAnswers = pendingAnswerDao.getDisapprovedAnswers(user.getId(), rowBounds);
 
         if (disapprovedAnswers == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView("data", disapprovedAnswers);
+        return ModelAndViewUtil.addObject(mv, "data", disapprovedAnswers);
     }
 }

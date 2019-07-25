@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,10 +15,10 @@ package com.snsoft.readingsystem.controller.studentController;
 import com.snsoft.readingsystem.dao.PendingTaskDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.PendingTask;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.service.PendingTaskService;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +39,8 @@ public class PendingTaskController {
     PendingTaskService pendingTaskService;
     @Resource
     PendingTaskDao pendingTaskDao;
+    @Resource
+    ModelAndView mv;
 
     @RequestMapping(value = "/commitTask", method = RequestMethod.POST)
     public ModelAndView commitTask(@SessionAttribute("user") User user,
@@ -55,7 +57,7 @@ public class PendingTaskController {
         try {
             return pendingTaskService.commitTask(pendingTask);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -65,7 +67,7 @@ public class PendingTaskController {
         try {
             return pendingTaskService.deletePendingTask(user.getId(), id);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
     /**
@@ -82,11 +84,11 @@ public class PendingTaskController {
         try {
             List<PendingTask> approvedTasks = pendingTaskDao.getApprovedTasksByStudentId(user.getId(), rowBounds);
             if (approvedTasks == null) {
-                return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                return ModelAndViewUtil.addObject(mv, Code.FAIL);
             }
-            return ModelAndViewUtil.getModelAndView("data", approvedTasks);
+            return ModelAndViewUtil.addObject(mv, "data", approvedTasks);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 
@@ -104,11 +106,11 @@ public class PendingTaskController {
         try {
             List<PendingTask> DisapprovedTasks = pendingTaskDao.getDisapprovedTasksByStudentId(user.getId(), rowBounds);
             if (DisapprovedTasks == null) {
-                return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                return ModelAndViewUtil.addObject(mv, Code.FAIL);
             }
-            return ModelAndViewUtil.getModelAndView("data", DisapprovedTasks);
+            return ModelAndViewUtil.addObject(mv, "data", DisapprovedTasks);
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -15,9 +15,9 @@ package com.snsoft.readingsystem.controller.commonController;
 import com.snsoft.readingsystem.dao.PendingTaskDao;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.enums.Identity;
+import com.snsoft.readingsystem.pojo.User;
 import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.utils.PageUtil;
-import com.snsoft.readingsystem.pojo.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +33,8 @@ import javax.annotation.Resource;
 public class PendingTaskController {
     @Resource
     PendingTaskDao pendingTaskDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 如果当前用户是学生则获取其所有提交的尚未审核的任务，如果是导师则返回其所创建的所有团队的尚未审核任务
@@ -48,14 +50,14 @@ public class PendingTaskController {
 
         try {
             if (user.getIdentityMark() == Identity.STUDENT.getIdentity()) {
-                return ModelAndViewUtil.getModelAndView("data",
+                return ModelAndViewUtil.addObject(mv, "data",
                         pendingTaskDao.getStudentPendingTasks(user.getId(), rowBounds));
             } else {
-                return ModelAndViewUtil.getModelAndView("data",
+                return ModelAndViewUtil.addObject(mv, "data",
                         pendingTaskDao.getTeacherPendingTasks(user.getId(), rowBounds));
             }
         } catch (RuntimeException e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
     }
 }

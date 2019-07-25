@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -16,8 +16,8 @@ import com.snsoft.readingsystem.dao.*;
 import com.snsoft.readingsystem.enums.Code;
 import com.snsoft.readingsystem.pojo.Attachment;
 import com.snsoft.readingsystem.pojo.AvailableFileSuffix;
-import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import com.snsoft.readingsystem.pojo.User;
+import com.snsoft.readingsystem.utils.ModelAndViewUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,6 +55,8 @@ public class FileController {
     PendingAnswerDao pendingAnswerDao;
     @Resource
     AvailableFileSuffix availableFileSuffix;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 文件上传
@@ -75,41 +77,41 @@ public class FileController {
         switch (mark) {
             case '1':
                 if (taskDao.getTaskById(id) == null) {
-                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    return ModelAndViewUtil.addObject(mv, Code.FAIL);
                 }
                 break;
             case '2':
                 if (pendingTaskDao.getPendingTaskById(id) == null) {
-                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    return ModelAndViewUtil.addObject(mv, Code.FAIL);
                 }
                 break;
             case '3':
                 if (answerDao.getAnswerById(id) == null) {
-                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    return ModelAndViewUtil.addObject(mv, Code.FAIL);
                 }
                 break;
             case '4':
                 if (pendingAnswerDao.getPendingAnswerById(id) == null) {
-                    return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                    return ModelAndViewUtil.addObject(mv, Code.FAIL);
                 }
         }
 
         //检测是否成功获取ApplicationContext
         WebApplicationContext currentWebApplicationContext = ContextLoader.getCurrentWebApplicationContext();
         if (currentWebApplicationContext == null) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
 
         // 检测是否成功获取ServletContext
         ServletContext servletContext = currentWebApplicationContext.getServletContext();
         if (servletContext == null) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
 
         String originalFilename = uploadFile.getOriginalFilename();
         //判断上传文件是否为空或文件名不符
         if (originalFilename == null || originalFilename.equals("")) {
-            return ModelAndViewUtil.getModelAndView(Code.SUCCESS, "未选择文件");
+            return ModelAndViewUtil.addObject(mv, Code.SUCCESS, "未选择文件");
         }
 
         //获取文件后缀名
@@ -117,7 +119,7 @@ public class FileController {
 
         // 判断文件后缀名是否符合要求
         if (!availableFileSuffix.contains(fileSuffix)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "不支持的文件类型");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "不支持的文件类型");
         }
 
         UUID uuid = UUID.randomUUID();
@@ -130,7 +132,7 @@ public class FileController {
 
         //如果文件父目录不存在且创建失败
         if (!file.getParentFile().exists() && !file.mkdirs()) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         try {
@@ -147,9 +149,9 @@ public class FileController {
             attachment.setFileName(originalFilename);
             attachmentDao.addAttachment(attachment);
         } catch (Exception e) {
-            return ModelAndViewUtil.getModelAndView(Code.ERROR);
+            return ModelAndViewUtil.addObject(mv, Code.ERROR);
         }
-        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
+        return ModelAndViewUtil.addObject(mv, Code.SUCCESS);
     }
 
     /**

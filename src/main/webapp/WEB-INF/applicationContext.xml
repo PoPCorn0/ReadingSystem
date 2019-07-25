@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.22
+  ~ @date 2019.07.25
   ~
   ~ @Description
   -->
@@ -22,7 +22,8 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-    <context:component-scan base-package="com.snsoft.readingsystem.service,com.snsoft.readingsystem.dao"/>
+    <context:component-scan
+            base-package="com.snsoft.readingsystem.service,com.snsoft.readingsystem.dao,com.snsoft.readingsystem.utils"/>
 
     <!--引入属性文件，在配置中占位使用 -->
     <context:property-placeholder location="classpath*:db.properties"/>
@@ -57,6 +58,12 @@
             </set>
         </property>
     </bean>
+
+    <bean id="modelAndView" class="org.springframework.web.servlet.ModelAndView" scope="prototype">
+        <property name="view" ref="mappingJackson2JsonView"/>
+    </bean>
+
+    <bean id="mappingJackson2JsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
 
     <!--装配dataSource-->
     <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

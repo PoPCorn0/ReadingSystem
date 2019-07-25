@@ -5,7 +5,7 @@
  *
  * @version
  *
- * @date 2019.06.16
+ * @date 2019.07.25
  *
  * @Description
  */
@@ -40,6 +40,8 @@ public class PraiseService {
     UserDao userDao;
     @Resource
     TaskDao taskDao;
+    @Resource
+    ModelAndView mv;
 
     /**
      * 点赞
@@ -53,23 +55,23 @@ public class PraiseService {
         Answer answer = answerDao.getAnswerById(answerId);
         // 判断解读是否存在
         if (answer == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "解读不存在");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "解读不存在");
         }
 
         // 判断解读是否属于点赞者
         if (answer.getAuthorId().equals(studentId)) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法给自己点赞");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法给自己点赞");
         }
 
         // 查询当天的点赞记录
         List<PraiseRecord> praiseRecords = recordDao.getPraiseRecordsByStudentIdInADay(studentId);
         if (praiseRecords == null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         // 判断是否重复点赞
         if (recordDao.getPraiseRecordByStudentIdAndAnswerId(studentId, answerId) != null) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL, "无法重复点赞");
+            return ModelAndViewUtil.addObject(mv, Code.FAIL, "无法重复点赞");
         }
 
         // 向praise_record插入一条记录
@@ -78,7 +80,7 @@ public class PraiseService {
         praiseRecord.setId(UUID.randomUUID().toString());
         praiseRecord.setPraiseId(studentId);
         if (recordDao.addPraiseRecord(praiseRecord) != 1) {
-            return ModelAndViewUtil.getModelAndView(Code.FAIL);
+            return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
         Task task = taskDao.getTaskById(answer.getTaskId());
@@ -86,9 +88,9 @@ public class PraiseService {
             //添加积分
             if (userDao.updateScore(studentId, task.getTeamId(), AllConstant.PRAISE) != 1 ||
                     userDao.updateScore(answer.getAuthorId(), task.getTeamId(), AllConstant.PRAISE) != 1)
-                return ModelAndViewUtil.getModelAndView(Code.FAIL);
+                return ModelAndViewUtil.addObject(mv, Code.FAIL);
         }
 
-        return ModelAndViewUtil.getModelAndView(Code.SUCCESS);
+        return ModelAndViewUtil.addObject(mv, Code.SUCCESS);
     }
 }
