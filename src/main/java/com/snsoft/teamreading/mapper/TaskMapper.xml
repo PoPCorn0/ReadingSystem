@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ @copyright ：神农大学生软件创新中心 版权所有 © 2019
+  ~
+  ~ @author 16级信息与计算科学潘鹏程
+  ~
+  ~ @version
+  ~
+  ~ @date 2019.08.22
+  ~
+  ~ @Description
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snsoft.teamreading.dao.TaskDao">
+
+    <insert id="addReceiver" parameterType="list">
+        insert into stu_task (task_id, student_id) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.taskId}, #{item.studentId})
+        </foreach>
+    </insert>
+
+    <select id="getAcceptedTasksInfoByStudentId" parameterType="string" resultType="acceptedTaskInfo">
+        select received_task.id received_task_id,
+               received_task.task_id,
+               (select team.name from team where team.id = task.team_id),
+               task.reward,
+               task.title,
+               task.content,
+               attachment.id    attachment_id,
+               received_task.receive_time
+        from received_task
+                 left join task on task.id = received_task.task_id
+                 left join attachment on task.id = attachment.rely_on_id
+        where received_task.receiver_id = #{studentId}
+          and received_task.is_final = '0'
+          and task.is_final = '0'
+        order by received_task.receive_time DESC
+    </select>
+
+    <select id="getTeacherTaskInfo" parameterType="string" resultType="taskInfo">
+        select task.id,
+               task.author_id,
+               student.name  author_id,
+               task.reward,
+               task.title,
+               task.content,
+               team.name,
+               attachment.id attachment_id,
+               task.commit_time,
+               task.end_time
+        from task
+                 left join team on team.id = task.team_id
+                 left join student on task.author_id = student.id
+                 left join attachment on task.id = attachment.rely_on_id
+        where task.team_id in (
+            select team.id
+            from team
+            where team.teacher_id = #{teacherId})
+          and task.end_time > now()
+          and task.is_final = '0'
+        order by end_time DESC
+    </select>
+
+    <select id="getStudentTaskInfo" parameterType="string" resultType="taskInfo">
+        select task.id,
+               task.author_id,
+               student.name,
+               task.reward,
+               task.title,
+               task.content,
+               team.name,
+               attachment.id,
+               task.commit_time,
+               task.end_time
+        from task
+                 left join team on team.id = task.team_id
+                 left join student on task.author_id = student.id
+                 left join attachment on task.id = attachment.rely_on_id
+        where task.id in (
+            select task_id
+            from stu_task
+            where stu_task.student_id = #{studentId})
+          and task.end_time > now()
+          and task.is_final = '0'
+        order by end_time DESC
+    </select>
+
+    <select id="getTaskDetailInfo" parameterType="string" resultType="taskDetailInfo">
+        select task.id,
+               task.reward,
+               task.title,
+               task.content,
+               team.name,
+               attachment.id    attachment_id,
+               task.author_id,
+               student.name     author_name,
+               pending_task.check_time,
+               task.commit_time publish_time,
+               task.end_time
+        from task
+                 left join team on team.id = task.team_id
+                 left join attachment on attachment.rely_on_id = task.id
+                 left join student on student.id = task.author_id
+                 left join pending_task on task.id = pending_task.id
+        where task.id = #{taskId}
+    </select>
+
+</mapper>

@@ -7,7 +7,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.06.03
+  ~ @date 2019.08.22
   ~
   ~ @Description
   -->
@@ -17,7 +17,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.snsoft</groupId>
-    <artifactId>readingsystem</artifactId>
+    <artifactId>team-reading-ssm</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -267,6 +267,17 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.58</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.8.23.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -275,6 +286,12 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.properties</include>
                 </includes>
             </resource>
         </resources>

@@ -6,7 +6,7 @@
   ~
   ~ @version
   ~
-  ~ @date 2019.05.21
+  ~ @date 2019.08.22
   ~
   ~ @Description
   -->
@@ -22,9 +22,9 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="com.snsoft.readingsystem.controller.commonController,
-        com.snsoft.readingsystem.controller.studentController,
-        com.snsoft.readingsystem.controller.teacherController"/>
+    <context:component-scan base-package="com.snsoft.teamreading.controller.commonController,
+        com.snsoft.teamreading.controller.studentController,
+        com.snsoft.teamreading.controller.teacherController"/>
 
     <context:annotation-config/>
 
@@ -33,21 +33,21 @@
     <mvc:default-servlet-handler/>
 
     <mvc:interceptors>
+        <!--<mvc:interceptor>-->
+        <!--<mvc:mapping path="/**.do"/>-->
+        <!--<mvc:mapping path="/common/**.do"/>-->
+        <!--<mvc:mapping path="/teacher/**.do"/>-->
+        <!--<mvc:mapping path="/student/**.do"/>-->
+        <!--<mvc:exclude-mapping path="/common/login.do"/>-->
+        <!--<bean class="com.snsoft.teamreading.interceptor.LoginInterceptor"/>-->
+        <!--</mvc:interceptor>-->
         <mvc:interceptor>
-            <mvc:mapping path="/**.do"/>
-            <mvc:mapping path="/common/**.do"/>
             <mvc:mapping path="/teacher/**.do"/>
-            <mvc:mapping path="/student/**.do"/>
-            <mvc:exclude-mapping path="/common/login.do"/>
-            <bean class="com.snsoft.readingsystem.interceptor.LoginInterceptor"/>
+            <bean class="com.snsoft.teamreading.interceptor.TeacherInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/teacher/**.do"/>
-            <bean class="com.snsoft.readingsystem.interceptor.TeacherInterceptor"/>
-        </mvc:interceptor>
-        <mvc:interceptor>
             <mvc:mapping path="/student/**.do"/>
-            <bean class="com.snsoft.readingsystem.interceptor.StudentInterceptor"/>
+            <bean class="com.snsoft.teamreading.interceptor.StudentInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
